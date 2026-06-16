@@ -137,9 +137,103 @@
     .shoe-content li{margin-bottom:8px}
     .shoe-content .quote{font-style:italic;font-weight:400;margin:15px 0;padding:15px;background:#f8f8f8;border-left:4px solid #000;border-radius:8px;color:#333}
     
+    /* Payment Methods */
+    .donation-block{
+      margin-top:60px;
+      padding-top:40px;
+      border-top:2px solid #e5e5e5;
+      text-align:center;
+    }
+    .donation-block h2{
+      font-size:2rem;
+      margin-bottom:10px;
+    }
+    .donation-block > p{
+      font-size:1rem;
+      color:#555;
+      margin-bottom:40px;
+    }
+    .momo-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      max-width:600px;
+      margin:0 auto 40px;
+    }
+    .momo-card{
+      background:#fafafa;
+      border:1px solid #e5e5e5;
+      border-radius:16px;
+      padding:25px 15px;
+      cursor:pointer;
+      transition:0.2s;
+      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    }
+    .momo-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 6px 16px rgba(0,0,0,0.1);
+    }
+    .momo-logo img{
+      width:80px;
+      height:50px;
+      object-fit:contain;
+      margin-bottom:10px;
+    }
+    .momo-label{
+      font-size:0.85rem;
+      color:#666;
+      margin:5px 0;
+    }
+    .momo-card h3{
+      font-size:1.1rem;
+      color:#000;
+      margin:0;
+    }
+    .paypal-card{
+      background:#fafafa;
+      border:1px solid #e5e5e5;
+      border-radius:16px;
+      padding:30px 20px;
+      cursor:pointer;
+      max-width:300px;
+      margin:0 auto;
+      transition:0.2s;
+      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    }
+    .paypal-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 6px 16px rgba(0,0,0,0.1);
+    }
+    .paypal-card img{
+      width:140px;
+      margin-bottom:15px;
+    }
+    .paypal-card h3{
+      font-size:1.2rem;
+      color:#000;
+      margin-bottom:10px;
+    }
+    .momo-number{
+      display:none;
+      margin-top:15px;
+      padding:12px;
+      background:#fff;
+      border-radius:8px;
+      font-weight:600;
+      font-size:1.1rem;
+      color:#000;
+      border:1px solid #e5e5e5;
+    }
+    .momo-number.active{
+      display:block;
+    }
+    
     @media(max-width:600px){
       h1,h2{font-size:1.9rem} 
       section{padding:70px 20px 70px}
+      .momo-grid{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
@@ -287,6 +381,53 @@
         
         <h3>Assembly Field Team Available</h3>
         <p>For distribution of donated shoe - comprehensive training provided. commit to measurable impact</p>
+
+        <!-- Payment Methods Block -->
+        <div class="donation-block">
+          <h2>Donate via Mobile Money</h2>
+          <p>We accept MTN Mobile Money and Airtel Money. Tap to see the merchant ID.</p>
+          
+          <div class="momo-grid">
+            
+            <!-- MTN Card -->
+            <div class="momo-card" onclick="togglePayment('mtn')">
+              <div class="momo-logo">
+                <img src="images/mtn-momo.png" alt="MTN">
+              </div>
+              <p class="momo-label">Mobile Money</p>
+              <h3>MTN MoMo</h3>
+              <div class="momo-number" id="mtn">
+                +256777229389<br>
+                Divine District Assembly Mityana
+              </div>
+            </div>
+            
+            <!-- Airtel Card -->
+            <div class="momo-card" onclick="togglePayment('airtel')">
+              <div class="momo-logo">
+                <img src="images/airtel-money.png" alt="Airtel">
+              </div>
+              <p class="momo-label">Mobile Money</p>
+              <h3>Airtel Money</h3>
+              <div class="momo-number" id="airtel">
+                +256708565054<br>
+                Divine District Assembly Mityana
+              </div>
+            </div>
+            
+          </div>
+
+          <!-- PayPal below -->
+          <div class="paypal-card" onclick="togglePayment('paypal')">
+            <img src="images/paypal.png" alt="PayPal">
+            <h3>PayPal</h3>
+            <div class="momo-number" id="paypal">
+              Email: Kneelz45allan@gmail.com<br>
+              IBAN: AE330030013548885810001
+            </div>
+          </div>
+          
+        </div>
       </div>
     </div>
   </section>
@@ -310,6 +451,16 @@
         hamburger.classList.remove('active');
       });
     });
+
+    function togglePayment(id){
+      // Hide all numbers first
+      document.querySelectorAll('.momo-number').forEach(el => {
+        if(el.id !== id) el.classList.remove('active');
+      });
+      
+      // Toggle the clicked one
+      document.getElementById(id).classList.toggle('active');
+    }
   </script>
 </body>
 </html>
