@@ -6,32 +6,88 @@
   <title>Divine District Assembly - Mityana</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;scroll-behavior:smooth}
-    body{background:#ffffff;color:#333;font-weight:400;line-height:1.8;padding-bottom:70px}
-    
-    nav{
-      position:fixed;
-      bottom:0;
-      top:auto;
-      left:0;
+    body{background:#ffffff;color:#333;font-weight:400;line-height:1.8}
+
+    /* Header with hamburger */
+    header{
+      position:sticky;
+      top:0;
       width:100%;
-      background:rgba(15,23,42,0.95);
-      backdrop-filter:blur(10px);
-      padding:15px 10px;
+      background:#000;
+      color:#fff;
       display:flex;
-      justify-content:center;
-      gap:25px;
+      justify-content:space-between;
+      align-items:center;
+      padding:14px 20px;
       z-index:1000;
-      border-top:1px solid rgba(255,255,255,0.1)
     }
-    nav a{
-      color:white;
+    .logo{font-weight:700;font-size:1rem}
+    
+    nav{display:flex;align-items:center}
+    
+    .nav-links{
+      list-style:none;
+      display:flex;
+      gap:25px;
+      margin:0;
+      padding:0;
+    }
+    .nav-links a{
+      color:#fff;
       text-decoration:none;
       font-weight:600;
       font-size:0.95rem;
       transition:0.3s
     }
-    nav a:hover{color:#fbbf24}
-    
+    .nav-links a:hover{color:#fbbf24}
+
+    /* Hamburger button */
+    .hamburger{
+      display:none;
+      flex-direction:column;
+      gap:5px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      padding:5px;
+    }
+    .hamburger span{
+      width:26px;
+      height:3px;
+      background:#fff;
+      display:block;
+      transition:0.3s;
+      border-radius:2px;
+    }
+
+    /* Mobile styles */
+    @media(max-width:768px){
+      .nav-links{
+        position:absolute;
+        top:100%;
+        right:0;
+        background:#000;
+        flex-direction:column;
+        width:220px;
+        padding:20px;
+        gap:18px;
+        display:none;
+        border-top:1px solid rgba(255,255,255,0.1);
+      }
+      .nav-links.active{display:flex}
+      .hamburger{display:flex}
+      
+      .hamburger.active span:nth-child(1){
+        transform:rotate(45deg) translate(7px,7px);
+      }
+      .hamburger.active span:nth-child(2){
+        opacity:0;
+      }
+      .hamburger.active span:nth-child(3){
+        transform:rotate(-45deg) translate(7px,-7px);
+      }
+    }
+
     section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 20px 80px;scroll-margin-top:70px;background:#ffffff;color:#333}
     
     h1,h2,h3,h4,h5,h6{
@@ -51,13 +107,10 @@
     .card h2{margin-bottom:20px;font-size:1.8rem}
     .btn{display:inline-block;background:#000;color:white;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600}
     .btn:hover{background:#333}
-    .services{display:grid;gap:15px}
-    .service-item{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #e5e5e5}
     footer{text-align:center;padding:40px 20px;background:#000;color:white}
     
     .email-box{background:#f1f5f9;padding:20px;border-radius:12px;font-size:1.2rem;font-weight:500;margin-top:20px;color:#333}
     .highlight{font-weight:700;color:#000}
-    .highlight-green{font-weight:700;color:#000}
     .link-btn{display:inline-block;background:#000;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:15px;font-weight:600}
     .link-btn:hover{background:#333}
     
@@ -76,15 +129,31 @@
     .shoe-content .quote{font-style:italic;font-weight:400;margin:15px 0;padding:15px;background:#f8f8f8;border-left:4px solid #000;border-radius:8px;color:#333}
     
     @media(max-width:600px){
-      nav{gap:12px;padding:12px 5px;overflow-x:auto;justify-content:flex-start}
-      nav a{font-size:0.85rem;white-space:nowrap}
       h1,h2{font-size:1.9rem} 
       section{padding:70px 20px 70px}
-      body{padding-bottom:60px}
     }
   </style>
 </head>
 <body>
+  <header>
+    <div class="logo">Divine Assembly Mityaana</div>
+    <nav>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About us</a></li>
+        <li><a href="#assemblies">Assemblies</a></li>
+        <li><a href="#authority">Authority</a></li>
+        <li><a href="#restoration">Restoration</a></li>
+        <li><a href="#join">Join</a></li>
+        <li><a href="#shoe-donate">Shoe Donate</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </header>
+
   <section id="about">
     <div class="container" style="text-align:center">
       <span class="badge">Non-Profit Assembly • Mityana District</span>
@@ -213,36 +282,25 @@
     </div>
   </section>
 
-  <div class="container" style="padding:60px 20px">
-    <div class="card">
-      <h2>Service & Gathering Times</h2>
-      <div class="services">
-        <div class="service-item"><span>Community Assembly</span><span>Sunday 10:00 AM</span></div>
-        <div class="service-item"><span>Development Planning</span><span>Wednesday 6:00 PM</span></div>
-        <div class="service-item"><span>Prayer for Restoration</span><span>Friday 7:00 PM</span></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Contact & Location</h2>
-      <p><b>District:</b> Mityana District, Uganda</p>
-      <p><b>Phone:</b> +256 7XX XXX</p>
-      <p><b>Email:</b> divinedistrictassemblymityana@gmail.com</p>
-      <a href="https://wa.me/2567XXXXXXXXX" class="btn">Connect on WhatsApp</a>
-    </div>
-  </div>
-
   <footer>
     © 2026 Divine District Assembly - Mityana District. Restoring Communities Through Natural Law.
   </footer>
 
-  <nav>
-    <a href="#about">About us</a>
-    <a href="#assemblies">Assemblies</a>
-    <a href="#authority">Authority</a>
-    <a href="#restoration">Restoration</a>
-    <a href="#join">Join</a>
-    <a href="#shoe-donate">Shoe Donate</a>
-  </nav>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('active');
+      });
+    });
+  </script>
 </body>
 </html>
