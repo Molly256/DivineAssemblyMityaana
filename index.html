@@ -6,12 +6,12 @@
   <title>Divine District Assembly - Mityana</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;scroll-behavior:smooth}
-    body{background:#f8fafc;color:#1e293b;line-height:1.8}
+    body{background:#ffffff;color:#333;font-weight:400;line-height:1.8;padding-bottom:70px}
     
-    /* STICKY MENU */
     nav{
       position:fixed;
-      top:0;
+      bottom:0;
+      top:auto;
       left:0;
       width:100%;
       background:rgba(15,23,42,0.95);
@@ -21,7 +21,7 @@
       justify-content:center;
       gap:25px;
       z-index:1000;
-      border-bottom:1px solid rgba(255,255,255,0.1)
+      border-top:1px solid rgba(255,255,255,0.1)
     }
     nav a{
       color:white;
@@ -32,55 +32,59 @@
     }
     nav a:hover{color:#fbbf24}
     
-    section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 20px 80px;scroll-margin-top:70px}
-    header{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:white;text-align:center}
-    header h1{font-size:2.5rem;margin-bottom:20px;line-height:1.3}
-    header p{font-size:1.2rem;max-width:700px;margin:0 auto;opacity:0.95}
-    .badge{display:inline-block;background:rgba(255,255,255,0.15);padding:8px 16px;border-radius:50px;font-size:0.9rem;margin-bottom:20px}
+    section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 20px 80px;scroll-margin-top:70px;background:#ffffff;color:#333}
+    
+    h1,h2,h3,h4,h5,h6{
+      color:#000;
+      font-weight:700;
+    }
+    
+    h1{font-size:2.5rem;margin-bottom:20px;line-height:1.3}
+    h2{font-size:2.3rem;margin-bottom:25px}
+    h3{font-size:1.5rem;margin:25px 0 15px}
+    
+    p,li,span,div{font-weight:400;color:#333}
+    
+    .badge{display:inline-block;background:#f1f5f9;padding:8px 16px;border-radius:50px;font-size:0.9rem;margin-bottom:20px;color:#333;font-weight:500}
     .container{max-width:900px;margin:0 auto;width:100%}
-    .card{background:white;border-radius:20px;padding:40px;margin-bottom:30px;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
-    .card h2{color:#1e3a8a;margin-bottom:20px;font-size:1.8rem}
-    .btn{display:inline-block;background:#2563eb;color:white;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600}
-    .btn:hover{background:#1d4ed8}
+    .card{background:#fafafa;border-radius:20px;padding:40px;margin-bottom:30px;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+    .card h2{margin-bottom:20px;font-size:1.8rem}
+    .btn{display:inline-block;background:#000;color:white;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600}
+    .btn:hover{background:#333}
     .services{display:grid;gap:15px}
-    .service-item{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #e2e8f0}
-    footer{text-align:center;padding:40px 20px;background:#0f172a;color:white}
-    .page2{background:#eef2ff;color:#1e293b;text-align:center}
-    .page2 h2{font-size:2.3rem;color:#1e3a8a;margin-bottom:25px}
-    .page2 p{font-size:1.2rem;max-width:750px;margin:0 auto 15px}
-    .page3{background:linear-gradient(135deg,#1e293b,#334155);color:white;text-align:center}
-    .page3 h2{font-size:2.3rem;margin-bottom:25px;color:#fbbf24}
-    .page3 p{font-size:1.2rem;max-width:800px;margin:0 auto 15px;opacity:0.95}
-    .page4{background:#f0fdf4;color:#166534}
-    .page4 h2{font-size:2.3rem;color:#15803d;margin-bottom:25px;text-align:center}
-    .page4 p{font-size:1.1rem;margin-bottom:15px}
-    .page5{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;text-align:center}
-    .page5 h2{font-size:2.5rem;margin-bottom:25px}
-    .page5 p{font-size:1.3rem;max-width:700px;margin:0 auto 20px;opacity:0.95}
-    .email-box{background:rgba(255,255,255,0.15);padding:20px;border-radius:12px;font-size:1.2rem;font-weight:600;margin-top:20px}
-    .highlight{font-weight:700;color:#fbbf24}
-    .highlight-green{font-weight:700;color:#15803d}
-    .link-btn{display:inline-block;background:#15803d;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:15px;font-weight:600}
-    .link-btn:hover{background:#166534}
+    .service-item{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #e5e5e5}
+    footer{text-align:center;padding:40px 20px;background:#000;color:white}
+    
+    .email-box{background:#f1f5f9;padding:20px;border-radius:12px;font-size:1.2rem;font-weight:500;margin-top:20px;color:#333}
+    .highlight{font-weight:700;color:#000}
+    .highlight-green{font-weight:700;color:#000}
+    .link-btn{display:inline-block;background:#000;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:15px;font-weight:600}
+    .link-btn:hover{background:#333}
+    
+    .shoe-donate-section{background:#ffffff;color:#333;text-align:left}
+    .shoe-donate-section h2{text-align:center}
+    .shoe-img{
+      max-width:100%;
+      height:auto;
+      border-radius:16px;
+      margin:20px 0;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08)
+    }
+    .shoe-content p{margin-bottom:15px;font-size:1.05rem}
+    .shoe-content ul{margin:15px 0 15px 25px}
+    .shoe-content li{margin-bottom:8px}
+    .shoe-content .quote{font-style:italic;font-weight:400;margin:15px 0;padding:15px;background:#f8f8f8;border-left:4px solid #000;border-radius:8px;color:#333}
+    
     @media(max-width:600px){
       nav{gap:12px;padding:12px 5px;overflow-x:auto;justify-content:flex-start}
       nav a{font-size:0.85rem;white-space:nowrap}
-      header h1,.page2 h2,.page3 h2,.page4 h2,.page5 h2{font-size:1.9rem} 
-      section{padding:90px 20px 70px}
+      h1,h2{font-size:1.9rem} 
+      section{padding:70px 20px 70px}
+      body{padding-bottom:60px}
     }
   </style>
 </head>
 <body>
-  <!-- STICKY MENU -->
-  <nav>
-    <a href="#about">About us</a>
-    <a href="#assemblies">Assemblies</a>
-    <a href="#authority">Authority</a>
-    <a href="#restoration">Restoration</a>
-    <a href="#join">Join</a>
-  </nav>
-
-  <!-- PAGE 1: ABOUT US -->
   <section id="about">
     <div class="container" style="text-align:center">
       <span class="badge">Non-Profit Assembly • Mityana District</span>
@@ -93,7 +97,6 @@
     </div>
   </section>
 
-  <!-- PAGE 2: WHAT ARE COMMUNITY ASSEMBLIES -->
   <section class="page2" id="assemblies">
     <div class="container">
       <h2>What Are Community Assemblies?</h2>
@@ -101,12 +104,11 @@
         Our Community development assemblies serve as platforms for citizens to come together, discuss their needs, and collaborate on actionable plans that address local issues. By harnessing collective wisdom, we can create meaningful change.
       </p>
       <p>
-        <span class="highlight-green">No boss but associations of equal people</span> who want to transform the lives of the residents of their various communities for the better.
+        <span class="highlight">No boss but associations of equal people</span> who want to transform the lives of the residents of their various communities for the better.
       </p>
     </div>
   </section>
 
-  <!-- PAGE 3: AUTHORITY -->
   <section class="page3" id="authority">
     <div class="container">
       <h2>Authority</h2>
@@ -119,16 +121,15 @@
     </div>
   </section>
 
-  <!-- PAGE 4: GLOBAL RESTORATION PLAN -->
   <section class="page4" id="restoration">
     <div class="container">
       <h2>Global Restoration Plan</h2>
       <p>
-        The overall mission or goal in the <span class="highlight-green">C.A.R.E</span> movement is to use our energies in restoring this lovely planet called, Earth. The movement is dedicated to returning this planet to what our Creator/God intended it to originally be before it came under attack by certain unseen forces human agents whom you'll eventually get to know about as you take some time to watch the many videos which are shared in this website 
+        The overall mission or goal in the <span class="highlight">C.A.R.E</span> movement is to use our energies in restoring this lovely planet called, Earth. The movement is dedicated to returning this planet to what our Creator/God intended it to originally be before it came under attack by certain unseen forces human agents whom you'll eventually get to know about as you take some time to watch the many videos which are shared in this website 
         <a href="https://unitednetwork.earth" target="_blank" class="link-btn">unitednetwork.earth</a>
       </p>
       <p>
-        The <span class="highlight-green">CARE</span> movement is strictly a SPIRITUAL group and we're strongly anchored in the Divine work of our Creator Source/God.
+        The <span class="highlight">CARE</span> movement is strictly a SPIRITUAL group and we're strongly anchored in the Divine work of our Creator Source/God.
       </p>
       <p>
         The Creator Source/God finally heard the cries of His people and accepted pleads for mercy and liberation after hundreds of thousands of years. He therefore moved to sign a new covenant with His suffering people. This new covenant became effective from <b>December 2012</b>.
@@ -140,12 +141,11 @@
         To add to what I said earlier, the result of the new covenant now returns every power back to we the members of the human family including our freedom where no other human being wields anymore power and authority over the others except the CreatorGod who is the ONE and only KING in the universe.
       </p>
       <p>
-        These assets are now being managed by the leader of our movement <span class="highlight-green">C.A.R.E</span>, <span class="highlight-green">Kimberly Ann Goguen</span>. Kimberly's only plan is to return all this wealth directly back to the people. But, in order to carry out this plan, the people of the world must organize themselves at the community level where they are required to put forth project proposals which they know are near and dear to their communities heart.
+        These assets are now being managed by the leader of our movement <span class="highlight">C.A.R.E</span>, <span class="highlight">Kimberly Ann Goguen</span>. Kimberly's only plan is to return all this wealth directly back to the people. But, in order to carry out this plan, the people of the world must organize themselves at the community level where they are required to put forth project proposals which they know are near and dear to their communities heart.
       </p>
     </div>
   </section>
 
-  <!-- PAGE 5: JOIN THE MOVEMENT -->
   <section class="page5" id="join">
     <div class="container">
       <h2>Join the Movement</h2>
@@ -155,11 +155,64 @@
       <div class="email-box">
         divinedistrictassemblymityana@gmail.com
       </div>
-      <a href="mailto:divinedistrictassemblymityana@gmail.com" class="btn" style="background:white;color:#1e3a8a;margin-top:25px">Email Us Now</a>
+      <a href="mailto:divinedistrictassemblymityana@gmail.com" class="btn" style="margin-top:25px">Email Us Now</a>
     </div>
   </section>
 
-  <!-- OTHER INFO -->
+  <section class="shoe-donate-section" id="shoe-donate">
+    <div class="container">
+      <h2>Shoe Donate</h2>
+      <img src="images/shoes.jpg" alt="Shoes for donation" class="shoe-img">
+      
+      <div class="shoe-content">
+        <p><strong><em>A Smile from a Pair</em></strong> is a community-driven initiative operating under the Divine District Assembly, Mityana. We provide shoes to barefoot individuals and vulnerable communities. Under the slogan <em>Give a Shoe, Restore Hope</em> we collect, sort, and distribute quality shoe donations to restore dignity and opportunity.</p>
+        
+        <h3>Call-to-Action</h3>
+        <div class="quote">
+          "Bring your new or gently used shoes to our collection bin today.<br>
+          Every pair you donate walks directly into someone's heart, replacing bare feet with the protection, dignity, and joy they deserve.<br><br>
+          Don't let good shoes sit in the dark! Bring them to light by dropping them off at our donation point. Your small step creates a giant leap of hope for someone in need."
+        </div>
+        
+        <h3>Acceptance Guidelines (Crucial for Bins)</h3>
+        <ul>
+          <li><strong>Condition:</strong> Gently worn or brand new only.</li>
+          <li><strong>Types:</strong> School shoes, sneakers, and sturdy sandals preferred.</li>
+          <li><strong>No:</strong> Heavy damage, missing soles, or single shoes.</li>
+        </ul>
+        
+        <h3>Shoe donation benefits</h3>
+        <ul>
+          <li><strong>Protection:</strong> Safety on long, rough walks.</li>
+          <li><strong>Confidence:</strong> Pride in the community</li>
+          <li><strong>Dignity:</strong> The fundamental feeling of being valued and cared for.</li>
+        </ul>
+        
+        <p>A simple pair of shoes may seem small, but to someone else, it means dignity, confidence, and the feeling of being loved. You didn’t just give shoes—you <em>restored hope.</em></p>
+        
+        <p>Sometimes the smallest things make the biggest difference. Your single act of kindness brings warmth, comfort, and a happy smile to someone in need.</p>
+        
+        <ul>
+          <li>Financial or in-kind shoe donations may not be feasible for all supporters.</li>
+          <li>If donating shoes isn’t an option, there are other meaningful ways to help.</li>
+          <li>A monetary donation is another way to contribute. Your support enables us to:</li>
+        </ul>
+        
+        <ul>
+          <li>Collect, clean, and prepare shoes for distribution.</li>
+          <li>Reach communities with limited access to proper footwear</li>
+          <li>Cover logistics and transportation costs to deliver donations</li>
+          <li>Expand our outreach programs year-round</li>
+        </ul>
+        
+        <p>Every contribution, regardless of size, moves us closer to that goal.</p>
+        
+        <h3>Assembly Field Team Available</h3>
+        <p>For distribution of donated shoe - comprehensive training provided. commit to measurable impact</p>
+      </div>
+    </div>
+  </section>
+
   <div class="container" style="padding:60px 20px">
     <div class="card">
       <h2>Service & Gathering Times</h2>
@@ -182,5 +235,14 @@
   <footer>
     © 2026 Divine District Assembly - Mityana District. Restoring Communities Through Natural Law.
   </footer>
+
+  <nav>
+    <a href="#about">About us</a>
+    <a href="#assemblies">Assemblies</a>
+    <a href="#authority">Authority</a>
+    <a href="#restoration">Restoration</a>
+    <a href="#join">Join</a>
+    <a href="#shoe-donate">Shoe Donate</a>
+  </nav>
 </body>
 </html>
