@@ -140,8 +140,6 @@
     /* Payment Methods */
     .donation-block{
       margin-top:60px;
-      padding-top:40px;
-      border-top:2px solid #e5e5e5;
       text-align:center;
     }
     .donation-block h2{
@@ -385,7 +383,7 @@
         <!-- Payment Methods Block -->
         <div class="donation-block">
           <h2>Donate via Mobile Money</h2>
-          <p>We accept MTN Mobile Money and Airtel Money. Tap to see the merchant ID.</p>
+          <p>We accept MTN Mobile Money and Airtel Money. Tap to see number.</p>
           
           <div class="momo-grid">
             
@@ -453,12 +451,9 @@
     });
 
     function togglePayment(id){
-      // Hide all numbers first
       document.querySelectorAll('.momo-number').forEach(el => {
         if(el.id !== id) el.classList.remove('active');
       });
-      
-      // Toggle the clicked one
       document.getElementById(id).classList.toggle('active');
     }
   </script>
