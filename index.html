@@ -8,7 +8,7 @@
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;scroll-behavior:smooth}
     body{background:#ffffff;color:#333;font-weight:400;line-height:1.8}
 
-    /* Header with hamburger */
+    /* Header with inline tabs + hamburger */
     header{
       position:sticky;
       top:0;
@@ -18,7 +18,7 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:14px 20px;
+      padding:10px 20px;
       z-index:1000;
       border-bottom:1px solid #e5e5e5;
       box-shadow:0 2px 8px rgba(0,0,0,0.05);
@@ -28,27 +28,37 @@
       font-size:1rem;
       color:#000;
       letter-spacing:0.5px;
+      flex-shrink:0;
     }
     
-    nav{display:flex;align-items:center}
-    
-    .nav-links{
-      list-style:none;
-      display:flex;
-      gap:25px;
-      margin:0;
-      padding:0;
-    }
-    .nav-links a{
-      color:#000;
-      text-decoration:none;
-      font-weight:600;
-      font-size:0.95rem;
-      transition:0.3s
-    }
-    .nav-links a:hover{color:#555}
+    nav{display:flex;align-items:center;gap:18px}
 
-    /* Hamburger button */
+    /* New top tabs: emoji up, text down */
+    .top-tabs{
+      display:flex;
+      gap:22px;
+      align-items:center;
+      margin:0 auto;
+    }
+    .tab-link{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-decoration:none;
+      color:#000;
+      font-size:0.8rem;
+      font-weight:600;
+      transition:0.3s;
+      line-height:1.2;
+    }
+    .tab-link .emoji{
+      font-size:1.4rem;
+      line-height:1;
+      margin-bottom:3px;
+    }
+    .tab-link:hover{color:#555;transform:translateY(-1px)}
+
+    /* Hamburger button - now last */
     .hamburger{
       display:none;
       flex-direction:column;
@@ -67,12 +77,35 @@
       border-radius:2px;
     }
 
+    /* Desktop nav-links now only holds Join + Shoe Donate in dropdown */
+    .nav-links{
+      list-style:none;
+      display:flex;
+      gap:25px;
+      margin:0;
+      padding:0;
+    }
+    .nav-links a{
+      color:#000;
+      text-decoration:none;
+      font-weight:600;
+      font-size:0.95rem;
+      transition:0.3s
+    }
+    .nav-links a:hover{color:#555}
+
     /* Mobile styles */
     @media(max-width:768px){
+      .top-tabs{
+        gap:14px;
+      }
+      .tab-link{font-size:0.75rem}
+      .tab-link .emoji{font-size:1.3rem}
+
       .nav-links{
         position:absolute;
         top:100%;
-        right:0;
+        right:20px;
         background:#fff;
         flex-direction:column;
         width:220px;
@@ -80,7 +113,7 @@
         gap:18px;
         display:none;
         border:1px solid #e5e5e5;
-        border-top:none;
+        border-radius:12px;
         box-shadow:0 4px 12px rgba(0,0,0,0.08);
       }
       .nav-links.active{display:flex}
@@ -95,6 +128,13 @@
       .hamburger.active span:nth-child(3){
         transform:rotate(-45deg) translate(7px,-7px);
       }
+    }
+
+    @media(max-width:480px){
+      .logo{font-size:0.85rem}
+      .top-tabs{gap:10px}
+      .tab-link{font-size:0.7rem}
+      .tab-link .emoji{font-size:1.2rem}
     }
 
     section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 20px 80px;scroll-margin-top:70px;background:#ffffff;color:#333}
@@ -238,20 +278,38 @@
 <body>
   <header>
     <div class="logo">DIVINEASSEMBLYMITYAANA</div>
+    
     <nav>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#about">About us</a></li>
-        <li><a href="#assemblies">Assemblies</a></li>
-        <li><a href="#authority">Authority</a></li>
-        <li><a href="#restoration">Restoration</a></li>
-        <li><a href="#join">Join</a></li>
-        <li><a href="#shoe-donate">Shoe Donate</a></li>
-      </ul>
+      <!-- 4 tabs moved out: emoji up, text down -->
+      <div class="top-tabs">
+        <a href="#about" class="tab-link">
+          <span class="emoji">ℹ️</span>
+          <span>About us</span>
+        </a>
+        <a href="#assemblies" class="tab-link">
+          <span class="emoji">👥</span>
+          <span>Assemblies</span>
+        </a>
+        <a href="#authority" class="tab-link">
+          <span class="emoji">⚖️</span>
+          <span>Authority</span>
+        </a>
+        <a href="#restoration" class="tab-link">
+          <span class="emoji">🌍</span>
+          <span>Restoration</span>
+        </a>
+      </div>
+
+      <!-- 3 dashes last. Only Join + Shoe Donate inside -->
       <button class="hamburger" id="hamburger" aria-label="Menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#join">Join</a></li>
+        <li><a href="#shoe-donate">Shoe Donate</a></li>
+      </ul>
     </nav>
   </header>
 
