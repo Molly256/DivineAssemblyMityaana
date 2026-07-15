@@ -59,7 +59,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 .j:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
 .j img{width:140px;margin-bottom:15px}
 .j h3{font-size:1.2rem;color:#000;margin-bottom:10px}
-.u{display:none;margin-top:12px;padding:14px;background:#fff;border-radius:8px;font-weight:700;font-size:1.1rem;color:#000;border:1px solid #e5e5e5;letter-spacing:.5px;text-align:center}
+.u{display:none;margin-top:12px;padding:14px;background:#fff;border-radius:8px;font-weight:700;font-size:1.1rem;color:#000;border:1px solid #e5e5e5;letter-spacing:.5px;text-align:center;width:100%}
 .u.a{display:block}
 #cb{position:fixed;bottom:100px;right:20px;width:60px;height:60px;background:#16a34a;color:#fff;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:24px;cursor:move;touch-action:none;z-index:9999;user-select:none;-webkit-user-drag:none;box-shadow:0 4px 16px rgba(22,163,74,.4)}
 #cb:active{cursor:grabbing}
@@ -116,6 +116,12 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <h2>Authority</h2>
 <p>Kimberly Ann Goguen is the guardian of the planet, it's under her authority that we establish our assemblies. She has secured our freedom and sovereignty from the order that has held us in bondage for lifetime.</p>
 <p>Now at this moment we have the opportunity to <span class="z">arm our rights as sovereign beings</span> and establish a framework for self governance and the restoration of earth.</p>
+<p style="margin-top:20px">*Kim holds multiple leadership roles, including:*</p>
+<p>1. Universal Protection Unit Command (Ground Command/ Guardian)</p>
+<p><br>2. Ambassador to Earth for the Universal Council for this version of Homosapiens/Humanity.</p>
+<p><br>3. Director of Global Intelligence Agency (GIA) Clearance level 74/75.</p>
+<p><br>4. Computroller of currencies worldwide.</p>
+<p><br>5. Founder of the Unitednetwork.earth</p>
 </div>
 </section>
 <section class="p4" id="restoration">
@@ -160,6 +166,14 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <p>Sometimes the smallest things make the biggest difference. Your single act of kindness brings warmth, comfort, and a happy smile to someone in need.</p>
 <h3>Assembly Field Team Available</h3>
 <p>For distribution of donated shoes- comprehensive training provided,commit to measurable impact</p>
+<p>- Financial or in-kind shoe donations may not be feasible for all supporters.</p>
+<p>- If donating shoes isn’t an option, there are other meaningful ways to help.</p>
+<p>- A monetary donation is another way to contribute. Your support enables us to:</p>
+<p>- Collect, clean, and prepare shoes for distribution.</p>
+<p>- Reach communities with limited access to proper footwear</p>
+<p>- Cover logistics and transportation costs to deliver donations</p>
+<p>- Expand our outreach programs year-round</p>
+<p><br>Every contribution, regardless of size, moves us closer to that goal.</p>
 <div class="w">
 <h2>Donate via Mobile Money</h2>
 <p>We accept MTN Mobile Money and Airtel Money. Tap to see number.</p>
@@ -177,6 +191,8 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <div class="u" id="a">+256708565054</div>
 </div>
 </div>
+<p style="margin:30px 0 10px;text-align:center">*Donate Globally → PayPal | IBAN*</p>
+<p style="text-align:center"><br>*Support from Anywhere*<br>We welcome international donations. Give securely via PayPal or IBAN. Your gift provides shoes, dignity, and opportunity to vulnerable people.</p>
 <div class="j" onclick="t('p')">
 <img src="images/paypal.png" alt="PayPal">
 <h3>PayPal</h3>
@@ -190,7 +206,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 </div>
 <div id="cb">🎧<span id="b">1</span></div>
 <div id="c">
-<div id="d"><span><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l">×</button></div>
+<div id="d"><span><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l">×</button></div>
 <div id="e"></div>
 <button id="k">Talk to Admin 👤</button>
 <div id="h"><input id="i" placeholder="Type a message..."><button id="j">Send</button></div>
@@ -237,7 +253,12 @@ m.onclick=e=>{e.stopPropagation();n.classList.toggle('a');m.classList.toggle('ac
 document.addEventListener('click',e=>{if(!n.contains(e.target)&&!m.contains(e.target)){n.classList.remove('a');m.classList.remove('active')}});
 
 // Mobile money toggle
-function t(i){document.querySelectorAll('.u').forEach(e=>{if(e.id!=i)e.classList.remove('a')});document.getElementById(i).classList.toggle('a')}
+function t(i){
+  document.querySelectorAll('.u').forEach(e=>{
+    if(e.id!=i)e.classList.remove('a');
+  });
+  document.getElementById(i).classList.toggle('a');
+}
 
 // Chat widget
 const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k"),E='divinedistrictassemblymityana@gmail.com',T=18e4;let o=0,w=0,u=0,x,y,lx,ly,drag=0;const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'},move=e=>{drag=1;const t=e.touches?e.touches[0]:e;b.style.bottom=b.style.right="auto";b.style.left=(lx+t.clientX-x)+"px";b.style.top=(ly+t.clientY-y)+"px"};const start=e=>{drag=0;const t=e.touches?e.touches[0]:e;x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;document.onmousemove=document.ontouchmove=move;document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}};b.onmousedown=b.ontouchstart=start;b.ondragstart=ev=>ev.preventDefault();const A=(r,j)=>{const x=document.createElement('div');x.className=j;x.innerHTML=r;e.appendChild(x);e.scrollTop=e.scrollHeight;if(!o&&j=='f'){u++;B()}},G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'},R=msg=>{msg=msg.toLowerCase();if(msg.includes('join')||msg.includes('email'))return`To join, email us at ${E}`;return`I’m Chat. Tap "Talk to Admin"`},H=()=>{if(Notification.permission=='granted')new Notification('New Chat',{body:'Visitor wants Admin'});u++;B()},V=()=>{clearTimeout(w);w=setTimeout(()=>{if(o){A(`Admin unavailable. Email: <b>${E}</b>`,'f');o=0}},T)},S=()=>{const v=i.value.trim();if(!v)return;A(v,'g');i.value='';if(o){H();A('Admin alerted.','f');V();return}setTimeout(()=>A(R(v),'f'),500)};b.onclick=()=>{if(drag)return;o=!o;if(o){G();c.style.display='flex';u=0;B();if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f')}else c.style.display='none'};l.onclick=()=>{c.style.display='none';o=0};j.onclick=S;i.onkeydown=x=>x.key=='Enter'&&S();k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f');H();V()};window.adminReply=r=>{if(!o)return;A(r,'f');o=0;clearTimeout(w)};addEventListener('resize',()=>{if(o)G()});
