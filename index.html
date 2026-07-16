@@ -57,13 +57,9 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 .w{margin-top:60px;text-align:center}
 .w h2{font-size:1.8rem;margin-bottom:10px}
 .w>p{font-size:.95rem;color:#555;margin-bottom:40px}
-.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;max-width:100%;margin:0 auto 40px}
-.k{background:#fafafa;border:1px solid #e5e5e5;border-radius:16px;padding:25px 15px;cursor:pointer;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.k:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
 .o img{width:80px;height:50px;object-fit:contain;margin-bottom:10px}
 .v{font-size:.85rem;color:#666;margin:5px 0}
-.k h3{font-size:1.1rem;color:#000;margin:0}
-.j{background:#fafafa;border:1px solid #e5e5e5;border-radius:16px;padding:30px 20px;cursor:pointer;max-width:300px;margin:0 auto;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.j{background:#fafafa;border:1px solid #e5e5e5;border-radius:16px;padding:30px 20px;cursor:pointer;max-width:300px;margin:0 auto 20px;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .j:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
 .j img{width:140px;margin-bottom:15px}
 .j h3{font-size:1.2rem;color:#000;margin-bottom:10px}
@@ -88,10 +84,6 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 #k{width:100%;background:#dcfce7;border:0;border-top:1px solid #bbf7d0;padding:10px;font-size:.85rem;font-weight:600;cursor:pointer;color:#166534}
 #k:hover{background:#bbf7d0}
 .auth-list p{margin:4px 0;line-height:1.5}
-.iban-wrap{text-align:center;margin-top:20px}
-.iban-wrap img{width:100%;max-width:300px;border-radius:12px;cursor:pointer;border:1px solid #e5e5e5}
-.iban-num{display:none;margin-top:10px;font-weight:700;font-size:1rem;color:#000;word-break:break-all}
-.iban-num.a{display:block}
 @media(max-width:480px){#c{width:calc(100vw - 40px)}#cb{width:56px;height:56px;font-size:22px}}
 </style>
 </head>
@@ -192,30 +184,39 @@ We are dedicated to setting up community development assemblies across mityana d
 <p>- Cover logistics and transportation costs to deliver donations</p>
 <p>- Expand our outreach programs year-round</p>
 <p><br>Every contribution, regardless of size, moves us closer to that goal.</p>
+</div>
+
 <div class="w">
 <h2>Donate via Mobile Money</h2>
 <p>We accept MTN Mobile Money and Airtel Money. Tap to see number.</p>
-<div class="g">
-<div class="k" onclick="t('mtn')">
+
+<div class="j" onclick="t('mtn')">
 <div class="o"><img src="images/mtn-momo.png" alt="MTN"></div>
-<p class="v">Mobile Money</p>
 <h3>MTN MoMo</h3>
 <div class="u" id="mtn">+256777229389</div>
-<div class="k" onclick="t('a')">
+</div>
+
+<div class="j" onclick="t('a')">
 <div class="o"><img src="images/airtel-money.png" alt="Airtel"></div>
-<p class="v">Mobile Money</p>
 <h3>Airtel Money</h3>
 <div class="u" id="a">+256708565054</div>
+</div>
+
 <p style="margin:30px 0 10px;text-align:center;font-weight:700;color:#000">*Donate Globally → PayPal | IBAN*</p>
 <p style="text-align:center;font-weight:700;color:#000">*Support from Anywhere*<br>We welcome international donations. Give securely via PayPal or IBAN. Your gift provides shoes, dignity, and opportunity to vulnerable people.</p>
-<div class="iban-wrap">
+
+<div class="j">
 <img src="images/IBAN.jpg" alt="IBAN" onclick="document.getElementById('iban-num').classList.toggle('a')">
-<div class="iban-num" id="iban-num">IBAN: AE330030013548885810001</div>
-<div class="j" onclick="t('p')" style="margin-top:20px">
+<h3>IBAN</h3>
+<div class="u" id="iban-num">AE330030013548885810001</div>
+</div>
+
+<div class="j" onclick="t('p')">
 <img src="images/paypal.png" alt="PayPal">
 <h3>PayPal</h3>
 <div class="u" id="p">Kneelz45allan@gmail.com</div>
 </div>
+
 </div>
 </div>
 </section>
