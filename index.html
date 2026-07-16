@@ -7,11 +7,19 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 html,body{background:#fff;height:100%;overflow-x:hidden}
-.p{width:100%;max-width:480px;margin:0 auto;background:#fff;min-height:100vh;position:relative}
+.p{width:100%;background:#fff;min-height:100vh;position:relative}
 body{color:#333;font-weight:400;line-height:1.8;padding-bottom:80px}
+@media(min-width:481px){
+.p{max-width:1200px;margin:0 auto}
+.b{left:50%;transform:translateX(-50%);max-width:1200px}
+}
+@media(max-width:480px){
+.p{max-width:480px;margin:0 auto}
+.b{max-width:480px}
+}
 header{position:sticky;top:0;width:100%;background:#fff;color:#000;display:flex;justify-content:center;align-items:center;padding:14px 20px;z-index:1000;border-bottom:1px solid #e5e5e5;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .l{font-weight:800;font-size:1rem;color:#000;letter-spacing:.5px;text-align:center}
-.b{position:fixed;bottom:0;left:0;width:100%;max-width:480px;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;align-items:center;padding:12px 0 14px;z-index:1000}
+.b{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;align-items:center;padding:12px 0 14px;z-index:1000}
 .t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:#000;font-size:.65rem;font-weight:600;background:none!important;background-color:transparent!important;box-shadow:none!important;border:0;outline:0;border-radius:0;cursor:pointer;padding:0;margin:0 4px;text-align:center;white-space:nowrap;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 .t.e,.h.e{font-size:1.7rem;line-height:1;background:transparent!important;pointer-events:none}
 .h.active.e{transform:rotate(90deg)}
@@ -31,8 +39,8 @@ h2{font-size:2rem;margin-bottom:25px}
 h3{color:#000;font-weight:700;font-size:1.4rem;margin:25px 0 6px}
 p,li,span,div{font-weight:400;color:#333;font-size:1rem}
 .d{display:inline-block;background:#f1f5f9;padding:8px 16px;border-radius:50px;font-size:.9rem;margin-bottom:20px;color:#333;font-weight:500}
-.c{width:100%}
-.x{display:inline-block;background:#000;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600}
+.c{width:100%;max-width:800px;margin:0 auto}
+.x{display:inline-block;background:#000;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600;cursor:pointer;border:0}
 .x:hover{background:#333}
 f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:80px;display:block}
 .e{background:#f1f5f9;padding:20px;border-radius:12px;font-size:1.1rem;font-weight:500;margin-top:20px;color:#333;word-break:break-all}
@@ -49,7 +57,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 .w{margin-top:60px;text-align:center}
 .w h2{font-size:1.8rem;margin-bottom:10px}
 .w>p{font-size:.95rem;color:#555;margin-bottom:40px}
-.g{display:grid;grid-template-columns:1fr;gap:20px;max-width:100%;margin:0 auto 40px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;max-width:100%;margin:0 auto 40px}
 .k{background:#fafafa;border:1px solid #e5e5e5;border-radius:16px;padding:25px 15px;cursor:pointer;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .k:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
 .o img{width:80px;height:50px;object-fit:contain;margin-bottom:10px}
@@ -79,6 +87,11 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 #j:hover{background:#15803d}
 #k{width:100%;background:#dcfce7;border:0;border-top:1px solid #bbf7d0;padding:10px;font-size:.85rem;font-weight:600;cursor:pointer;color:#166534}
 #k:hover{background:#bbf7d0}
+.auth-list p{margin:4px 0;line-height:1.5}
+.iban-wrap{text-align:center;margin-top:20px}
+.iban-wrap img{width:100%;max-width:300px;border-radius:12px;cursor:pointer;border:1px solid #e5e5e5}
+.iban-num{display:none;margin-top:10px;font-weight:700;font-size:1rem;color:#000;word-break:break-all}
+.iban-num.a{display:block}
 @media(max-width:480px){#c{width:calc(100vw - 40px)}#cb{width:56px;height:56px;font-size:22px}}
 </style>
 </head>
@@ -101,7 +114,10 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <div class="c" style="text-align:center">
 <span class="d">Non-Profit Assembly • Mityana District</span>
 <h1>About us</h1>
-<p>Divine District Assembly is the restoration arm of Mityana District and is a non-profit assembly representing the citizens of Mityana to bring development at the community level.<br><br>We are on mission to set up community development assemblies across Mityana District, create new standards for communities to implement the restoration plan on the basis of natural law.</p>
+<p>*Divine District Assembly* was established on 29th December 2021.<br><br>
+We serve as the restoration arm of mityana district. As a non-profit body, our focus is to represent the people of mityana and promote development and empowerment at the grassroot level.<br><br>
+We stand in alignment with the C.A.R.E | Center for Armity and Restoration of The Earth.<br><br>
+We are dedicated to setting up community development assemblies across mityana district to elevate community standards and implement the restoration plan based on natural law.</p>
 </div>
 </section>
 <section class="p2" id="assemblies">
@@ -116,12 +132,14 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <h2>Authority</h2>
 <p>Kimberly Ann Goguen is the guardian of the planet, it's under her authority that we establish our assemblies. She has secured our freedom and sovereignty from the order that has held us in bondage for lifetime.</p>
 <p>Now at this moment we have the opportunity to <span class="z">arm our rights as sovereign beings</span> and establish a framework for self governance and the restoration of earth.</p>
-<p style="margin-top:20px">*Kim holds multiple leadership roles, including:*</p>
+<p style="margin-top:20px;font-weight:700;color:#000">*Kim holds multiple leadership roles, including:*</p>
+<div class="auth-list">
 <p>1. Universal Protection Unit Command (Ground Command/ Guardian)</p>
-<p><br>2. Ambassador to Earth for the Universal Council for this version of Homosapiens/Humanity.</p>
-<p><br>3. Director of Global Intelligence Agency (GIA) Clearance level 74/75.</p>
-<p><br>4. Computroller of currencies worldwide.</p>
-<p><br>5. Founder of the Unitednetwork.earth</p>
+<p>2. Ambassador to Earth for the Universal Council for this version of Homosapiens/Humanity.</p>
+<p>3. Director of Global Intelligence Agency (GIA) Clearance level 74/75.</p>
+<p>4. Computroller of currencies worldwide.</p>
+<p>5. Founder of the Unitednetwork.earth</p>
+<p>6. Head of the C.A.R.E| Center for Armity and Restoration of the Earth.</p>
 </div>
 </section>
 <section class="p4" id="restoration">
@@ -141,6 +159,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <div class="c" style="text-align:center">
 <h2>Community Projects & Programs</h2>
 <p><em>_CALL FOR PROPOSALS | MITYANA REGION_</em><br>Community assemblies are invited to submit proposals to:<a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:15px;display:inline-block">mityana.projects@protonmail.com</a></p>
+<button class="x" id="pdf-btn" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 Download PDF</button>
 </div>
 </section>
 <section class="p5" id="join">
@@ -148,8 +167,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <h2>Join the Movement</h2>
 <p>We invite all residents of Mityana District to join our Community assemblies and be part of the movement towards self governance. Your participation is crucial for the success of our restoration plans.</p>
 <div class="e">divinedistrictassemblymityana@gmail.com</div>
-<a href="mailto:divinedistrictassemblymityana@gmail.com" class="x" style="margin-top:25px">Email Us Now</a>
-<a href="images/PDF.pdf" target="_blank" class="x" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 Download PDF</a>
+<a href="mailto:divinedistrictassemblymityana@gmail.com" class="x" style="margin-top:25px">mityana.projects@protonmail.com</a>
 </div>
 </section>
 <section class="s" id="shoe-donate">
@@ -191,14 +209,16 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <div class="u" id="a">+256708565054</div>
 </div>
 </div>
-<p style="margin:30px 0 10px;text-align:center">*Donate Globally → PayPal | IBAN*</p>
-<p style="text-align:center"><br>*Support from Anywhere*<br>We welcome international donations. Give securely via PayPal or IBAN. Your gift provides shoes, dignity, and opportunity to vulnerable people.</p>
-<div class="j" onclick="t('p')">
+<p style="margin:30px 0 10px;text-align:center;font-weight:700;color:#000">*Donate Globally → PayPal | IBAN*</p>
+<p style="text-align:center;font-weight:700;color:#000">*Support from Anywhere*<br>We welcome international donations. Give securely via PayPal or IBAN. Your gift provides shoes, dignity, and opportunity to vulnerable people.</p>
+<div class="iban-wrap">
+<img src="public/images/iban.jpg" alt="IBAN" onclick="document.getElementById('iban-num').classList.toggle('a')">
+<div class="iban-num" id="iban-num">IBAN: AE330030013548885810001</div>
+</div>
+<div class="j" onclick="t('p')" style="margin-top:20px">
 <img src="images/paypal.png" alt="PayPal">
 <h3>PayPal</h3>
 <div class="u" id="p">Kneelz45allan@gmail.com</div>
-</div>
-</div>
 </div>
 </div>
 </section>
@@ -262,6 +282,17 @@ function t(i){
 
 // Chat widget
 const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k"),E='divinedistrictassemblymityana@gmail.com',T=18e4;let o=0,w=0,u=0,x,y,lx,ly,drag=0;const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'},move=e=>{drag=1;const t=e.touches?e.touches[0]:e;b.style.bottom=b.style.right="auto";b.style.left=(lx+t.clientX-x)+"px";b.style.top=(ly+t.clientY-y)+"px"};const start=e=>{drag=0;const t=e.touches?e.touches[0]:e;x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;document.onmousemove=document.ontouchmove=move;document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}};b.onmousedown=b.ontouchstart=start;b.ondragstart=ev=>ev.preventDefault();const A=(r,j)=>{const x=document.createElement('div');x.className=j;x.innerHTML=r;e.appendChild(x);e.scrollTop=e.scrollHeight;if(!o&&j=='f'){u++;B()}},G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'},R=msg=>{msg=msg.toLowerCase();if(msg.includes('join')||msg.includes('email'))return`To join, email us at ${E}`;return`I’m Chat. Tap "Talk to Admin"`},H=()=>{if(Notification.permission=='granted')new Notification('New Chat',{body:'Visitor wants Admin'});u++;B()},V=()=>{clearTimeout(w);w=setTimeout(()=>{if(o){A(`Admin unavailable. Email: <b>${E}</b>`,'f');o=0}},T)},S=()=>{const v=i.value.trim();if(!v)return;A(v,'g');i.value='';if(o){H();A('Admin alerted.','f');V();return}setTimeout(()=>A(R(v),'f'),500)};b.onclick=()=>{if(drag)return;o=!o;if(o){G();c.style.display='flex';u=0;B();if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f')}else c.style.display='none'};l.onclick=()=>{c.style.display='none';o=0};j.onclick=S;i.onkeydown=x=>x.key=='Enter'&&S();k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f');H();V()};window.adminReply=r=>{if(!o)return;A(r,'f');o=0;clearTimeout(w)};addEventListener('resize',()=>{if(o)G()});
+
+// PDF button - open chat and auto-send message
+document.getElementById('pdf-btn').onclick=function(){
+  if(!o){b.click()}
+  setTimeout(()=>{
+    i.value='hey 👋 I want to download PDF';
+    S();
+    H();
+    V();
+  },300);
+};
 </script>
 </body>
 </html>
