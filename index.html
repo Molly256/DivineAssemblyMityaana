@@ -205,8 +205,8 @@ We are dedicated to setting up community development assemblies across mityana d
 <p style="margin:30px 0 10px;text-align:center;font-weight:700;color:#000">*Donate Globally → PayPal | IBAN*</p>
 <p style="text-align:center;font-weight:700;color:#000">*Support from Anywhere*<br>We welcome international donations. Give securely via PayPal or IBAN. Your gift provides shoes, dignity, and opportunity to vulnerable people.</p>
 
-<div class="j">
-<img src="images/IBAN.jpg" alt="IBAN" onclick="document.getElementById('iban-num').classList.toggle('a')">
+<div class="j" onclick="t('iban-num')">
+<img src="images/IBAN.jpg" alt="IBAN">
 <h3>IBAN</h3>
 <div class="u" id="iban-num">AE330030013548885810001</div>
 </div>
@@ -270,7 +270,7 @@ const m=document.getElementById('m'),n=document.getElementById('n');
 m.onclick=e=>{e.stopPropagation();n.classList.toggle('a');m.classList.toggle('active')};
 document.addEventListener('click',e=>{if(!n.contains(e.target)&&!m.contains(e.target)){n.classList.remove('a');m.classList.remove('active')}});
 
-// Mobile money toggle
+// Toggle function for donation cards
 function t(i){
   document.querySelectorAll('.u').forEach(e=>{
     if(e.id!=i)e.classList.remove('a');
