@@ -118,20 +118,6 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </head>
 <body>
 
-<script>
-// 1. ADMIN PASSWORD GATE - ADDED
-const ADMIN_PASS = "ROCK256";
-if(sessionStorage.getItem('ddaAuth')!== 'true'){
-  const pass = prompt("🔒 Admin Login Required\nEnter Password:");
-  if(pass!== ADMIN_PASS){
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;color:#dc3545'>Access Denied</h2><p style='text-align:center'>Wrong password</p>";
-    throw new Error("Unauthorized");
-  } else {
-    sessionStorage.setItem('ddaAuth', 'true'); // stay logged in until tab closed
-  }
-}
-</script>
-
 <div class="p"><header><div class="l">DIVINE DISTRICT ASSEMBLY</div></header>
 
 <!-- BOTTOM NAV -->
@@ -275,7 +261,7 @@ if(sessionStorage.getItem('ddaAuth')!== 'true'){
 </div>
 <div id="cb">🎧<span id="b">1</span></div>
 <div id="c">
-<div id="d"><span><svg viewBox="0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l">×</button></div>
+<div id="d"><span><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l">×</button></div> <!-- FIXED: viewBox -->
 <div id="e"></div>
 <button id="k">Talk to Admin 👤</button>
 <div id="h"><input id="i" placeholder="Type a message..."><button id="j">Send</button></div>
