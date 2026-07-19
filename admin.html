@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Chat Panel</title>
+    <link rel="manifest" href="./manifest.json">
+    
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; display: flex; flex-direction: column; height: 100vh; }
+        header { background: #007bff; color: white; padding: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg-row { display: flex; gap: 8px; align-items: flex-end; }
+        .msg-row.user { justify-content: flex-start; }
+        .msg-row.admin { justify-content: flex-end; }
+        .msg { max-width: 70%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; position: relative; }
+        .user { background: #ffffff; border: 1px solid #e0e0e0; color: #333; }
+        .admin { background: #007bff; color: white; }
+        .del-btn { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 50%; font-size: 12px; cursor: pointer; opacity: 0; transition: .2s; }
+        .msg-row:hover .del-btn { opacity: 1; }
+        .input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #ddd; gap: 8px; flex-direction: column; }
+        .input-row { display: flex; gap: 8px; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 1rem; }
+        button { background: #007bff; color: white; border: none; padding: 0 20px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        button:hover { background: #0056b3; }
+        #emoji-toggle { padding: 0 14px; background: #6c757d; }
+        #emoji-picker { display: none; background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 10px; gap: 8px; flex-wrap: wrap; max-height: 160px; overflow-y: auto; }
+        #emoji-picker span { font-size: 22px; cursor: pointer; padding: 4px; }
+        #emoji-picker span:hover { background: #f0f0f0; border-radius: 6px; }
+    </style>
+</head>
+<body>
+
+<script>
+// 1. PASSWORD CHECK - RUNS BEFORE APP LOADS
+const ADMIN_PASS = "ROCKY256";
+if(sessionStorage.getItem('adminAuth') !== 'true'){
+  const pass = prompt("🔒 Admin Login Required\nEnter Password:");
+  if(pass !== ADMIN_PASS){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;color:#dc3545'>Access Denied</h2><p style='text-align:center'>Wrong password</p>";
+    throw new Error("Unauthorized");
+  } else {
+    sessionStorage.setItem('adminAuth', 'true'); // stay logged in until tab/app closed
+  }
+}
+</script>
+
+<header>Admin Live Support</header>
+<div id="chat-window"></div>
+<div class="input-area">
+    <div id="emoji-picker"></div>
+    <div class="input-row">
+        <button id="emoji-toggle">😀</button>
+        <input type="text" id="admin-message" placeholder="Type your reply here..." onkeydown="if(event.key === 'Enter') sendAdminReply()">
+        <button onclick="sendAdminReply()">Send</button>
+    </div>
+</div>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(() => console.log('Service Worker Registered Successfully'));
+    }
+
+    let totalMessagesSeen = 0;
+    let isWindowActive = true;
+    let allMessages = [];
+
+    window.addEventListener('focus', () => {
+        isWindowActive = true;
+        clearNotificationBadge();
+    });
+    window.addEventListener('blur', () => { isWindowActive = false; });
+
+    // Emoji keyboard
+    const emojis = ['😀','😂','❤️','👍','🙏','🔥','💯','✅','❌','🤝','📞','📧','🌍','💰','🎁'];
+    const picker = document.getElementById('emoji-picker');
+    emojis.forEach(e => {
+        const span = document.createElement('span');
+        span.textContent = e;
+        span.onclick = () => {
+            const input = document.getElementById('admin-message');
+            input.value += e;
+            input.focus();
+        };
+        picker.appendChild(span);
+    });
+    document.getElementById('emoji-toggle').onclick = () => {
+        picker.style.display = picker.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    async function checkNewMessages() {
+        try {
+            const response = await fetch('/api/chat');
+            if (!response.ok) return;
+            const messages = await response.json();
+            allMessages = messages;
+
+            if (messages.length !== totalMessagesSeen) {
+                const newMessagesCount = messages.length - totalMessagesSeen;
+                renderChatWindow(messages);
+                totalMessagesSeen = messages.length;
+
+                if (newMessagesCount > 0 && !isWindowActive && navigator.setAppBadge) {
+                    navigator.setAppBadge(newMessagesCount).catch(err => console.error(err));
+                }
+            }
+        } catch (error) {
+            console.error("Error updates polling:", error);
+        }
+    }
+
+    function renderChatWindow(messages) {
+        const chatWindow = document.getElementById('chat-window');
+        chatWindow.innerHTML = '';
+
+        messages.forEach((msgString, index) => {
+            const msg = JSON.parse(msgString);
+            const row = document.createElement('div');
+            row.classList.add('msg-row', msg.sender);
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('msg', msg.sender);
+            msgDiv.textContent = msg.text;
+
+            const delBtn = document.createElement('button');
+            delBtn.classList.add('del-btn');
+            delBtn.textContent = '×';
+            delBtn.onclick = () => deleteMessage(index);
+
+            row.appendChild(delBtn);
+            row.appendChild(msgDiv);
+            chatWindow.appendChild(row);
+        });
+
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function deleteMessage(index) {
+        if (!confirm('Delete this message?')) return;
+        await fetch('/api/chat', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index })
+        });
+        await checkNewMessages();
+    }
+
+    async function sendAdminReply() {
+        const inputField = document.getElementById('admin-message');
+        const text = inputField.value.trim();
+        if (!text) return;
+        inputField.value = '';
+        picker.style.display = 'none';
+
+        try {
+            await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sender: 'admin', text: text, timestamp: Date.now() })
+            });
+            await checkNewMessages();
+        } catch (error) {
+            console.error("Failed sending admin message:", error);
+        }
+    }
+
+    function clearNotificationBadge() {
+        if (navigator.clearAppBadge) {
+            navigator.clearAppBadge().catch(err => console.error(err));
+        }
+    }
+
+    setInterval(checkNewMessages, 3000);
+    checkNewMessages();
+</script>
+</body>
+</html>
