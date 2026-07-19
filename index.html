@@ -30,6 +30,8 @@ header{position:sticky;top:0;width:100%;background:#fff;color:#000;display:flex;
 .t span.e,.h span.e{font-size:1.6rem;line-height:1;background:transparent!important;pointer-events:none}
 .h.active span.e{transform:rotate(90deg)}
 .t:active,.h:active{background:transparent!important}
+.t.active { color: #16a34a; } /* ADDED: active nav highlight */
+.t.active span.e { transform: scale(1.2); }
 
 .n{list-style:none;display:none;position:fixed;bottom:80px;right:10px;background:#fff;flex-direction:column;width:240px;padding:6px 0;border:1px solid #e5e5e5;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);z-index:1001}
 @media(max-width:480px){.n{width:calc(100vw - 40px)}}
@@ -39,8 +41,9 @@ header{position:sticky;top:0;width:100%;background:#fff;color:#000;display:flex;
 .n a::before{content:attr(data-emoji);font-size:1.1rem;line-height:1;flex-shrink:0}
 .n a:hover{background:#f5f5f5}
 
-section{min-height:100vh;display:none;flex-direction:column;justify-content:flex-start;padding:80px 20px 80px;scroll-margin-top:70px;background:#fff;color:#333}
-section.active{display:flex}
+/* CHANGED: All sections now show and stack */
+section{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start;padding:80px 20px 80px;scroll-margin-top:70px;background:#fff;color:#333}
+
 h1,h2{color:#000;font-weight:700}
 h1{font-size:2.2rem;margin-bottom:20px;line-height:1.3}
 h2{font-size:2rem;margin-bottom:25px}
@@ -50,7 +53,7 @@ p,li,span,div{font-weight:400;color:#333;font-size:1rem}
 .c{width:100%;max-width:800px;margin:0 auto}
 .x{display:inline-block;background:#000;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600;cursor:pointer;border:0}
 .x:hover{background:#333}
-f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:80px;display:block}
+footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:80px;display:block} /* FIXED: was <f> */
 .e{background:#f1f5f9;padding:20px;border-radius:12px;font-size:1.1rem;font-weight:500;margin-top:20px;color:#333;word-break:break-all}
 .z{font-weight:700;color:#000}
 .y{display:inline-block;background:#000;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:15px;font-weight:600}
@@ -108,12 +111,27 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 .b{padding:16px 40px 18px}
 .t,.h{font-size:.75rem;gap:6px}
 .t span.e{font-size:2rem}
-} /* <-- ADDED THIS MISSING } */
+}
 
 @media(max-width:480px){#c{width:calc(100vw - 40px)}#cb{width:56px;height:56px;font-size:22px}}
 </style>
 </head>
 <body>
+
+<script>
+// 1. ADMIN PASSWORD GATE - ADDED
+const ADMIN_PASS = "ROCK256";
+if(sessionStorage.getItem('ddaAuth')!== 'true'){
+  const pass = prompt("🔒 Admin Login Required\nEnter Password:");
+  if(pass!== ADMIN_PASS){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;color:#dc3545'>Access Denied</h2><p style='text-align:center'>Wrong password</p>";
+    throw new Error("Unauthorized");
+  } else {
+    sessionStorage.setItem('ddaAuth', 'true'); // stay logged in until tab closed
+  }
+}
+</script>
+
 <div class="p"><header><div class="l">DIVINE DISTRICT ASSEMBLY</div></header>
 
 <!-- BOTTOM NAV -->
@@ -183,7 +201,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 </section><section id="community-projects">
 <div class="c" style="text-align:center">
 <h2>Community Projects & Programs</h2>
-<p><em>_CALL FOR PROPOSALS | MITYANA REGION_</em><br>Community assemblies are invited to submit proposals to:<a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:15px;display:inline-block">mityana.projects@protonmail.com</a></p>
+<p><em>Mityana Regional Project Proposal</em><br>Community assemblies are invited to submit proposals to:<a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:15px;display:inline-block">mityana.projects@protonmail.com</a></p>
 <button class="x" id="pdf-btn" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 Download PDF</button>
 </div>
 </section>
@@ -192,7 +210,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <h2>Join the Movement</h2>
 <p>We invite all residents of Mityana District to join our Community assemblies and be part of the movement towards self governance. Your participation is crucial for the success of our restoration plans.</p>
 <div class="e">divinedistrictassemblymityana@gmail.com</div>
-<a href="mailto:divinedistrictassemblymityana@gmail.com" class="x" style="margin-top:25px">mityana.projects@protonmail.com</a>
+<a href="mailto:divinedistrictassemblymityana@gmail.com" class="x" style="margin-top:25px">divinedistrictassemblymityana@gmail.com</a> <!-- FIXED: email match -->
 </div>
 </section>
 <section class="s" id="shoe-donate">
@@ -253,7 +271,7 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 </div>
 </div>
 </section>
-<f>© 2026 Divine District Assembly - Mityana District. Restoring Communities Through Natural Raw.</f>
+<footer>© 2026 Divine District Assembly - Mityana District. Restoring Communities Through Natural Raw.</footer> <!-- FIXED: was <f> -->
 </div>
 <div id="cb">🎧<span id="b">1</span></div>
 <div id="c">
@@ -263,28 +281,13 @@ f{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:8
 <div id="h"><input id="i" placeholder="Type a message..."><button id="j">Send</button></div>
 </div>
 <script>
-// Tab switching for bottom bar
+// NEW: Scroll instead of hide/show
 const tabs = document.querySelectorAll('.t');
-const sections = document.querySelectorAll('section');
-
-function showSection(id) {
-  sections.forEach(s => s.classList.remove('active'));
-  const target = document.querySelector(id);
-  if(target) {
-    target.classList.add('active');
-    window.scrollTo(0,0);
-  }
-}
-
-// Show first section on load
-showSection('#about');
-
-// Handle bottom bar taps
 tabs.forEach(tab => {
   tab.onclick = e => {
     e.preventDefault();
     const href = tab.getAttribute('href');
-    showSection(href);
+    document.querySelector(href).scrollIntoView({behavior: 'smooth'});
   }
 });
 
@@ -292,7 +295,7 @@ tabs.forEach(tab => {
 document.querySelectorAll('.n a').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
-    showSection(a.getAttribute('href'));
+    document.querySelector(a.getAttribute('href')).scrollIntoView({behavior: 'smooth'});
     n.classList.remove('a');
     m.classList.remove('active');
   });
@@ -322,6 +325,19 @@ document.getElementById('pdf-btn').onclick=function(){
     S();
   },300);
 };
+
+// ADDED: Highlight active nav on scroll
+const sections = document.querySelectorAll('section');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      tabs.forEach(t=>t.classList.remove('active'));
+      const id = entry.target.getAttribute('id');
+      document.querySelector(`.t[href="#${id}"]`)?.classList.add('active');
+    }
+  })
+},{threshold:0.5});
+sections.forEach(s=>observer.observe(s));
 </script>
 </body>
 </html>
