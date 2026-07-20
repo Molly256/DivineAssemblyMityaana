@@ -33,7 +33,7 @@
 
 <script>
 // 1. PASSWORD CHECK - RUNS BEFORE APP LOADS
-const ADMIN_PASS = "ROCKY256";
+const ADMIN_PASS = "Mityana9";
 if(sessionStorage.getItem('adminAuth') !== 'true'){
   const pass = prompt("🔒 Admin Login Required\nEnter Password:");
   if(pass !== ADMIN_PASS){
@@ -57,6 +57,9 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
 </div>
 
 <script>
+    // PUT YOUR VERCEL API URL HERE - MUST MATCH INDEX.HTML
+    const API_URL = "https://www.divinedistrictassembly-mityana.org/api/chat";
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./service-worker.js')
             .then(() => console.log('Service Worker Registered Successfully'));
@@ -91,7 +94,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
 
     async function checkNewMessages() {
         try {
-            const response = await fetch('/api/chat');
+            const response = await fetch(API_URL); // CHANGED
             if (!response.ok) return;
             const messages = await response.json();
             allMessages = messages;
@@ -138,7 +141,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
 
     async function deleteMessage(index) {
         if (!confirm('Delete this message?')) return;
-        await fetch('/api/chat', {
+        await fetch(API_URL, { // CHANGED
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ index })
@@ -154,7 +157,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
         picker.style.display = 'none';
 
         try {
-            await fetch('/api/chat', {
+            await fetch(API_URL, { // CHANGED
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sender: 'admin', text: text, timestamp: Date.now() })

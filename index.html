@@ -301,8 +301,64 @@ function t(i){
 }
 
 // Chat widget - Connected to API + Admin
-const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};const G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'};async function send(t){await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'user',text:t,timestamp:Date.now()})})}async function check(){try{const r=await fetch('/api/chat');if(!r.ok)return;const msgs=await r.json();if(msgs.length>last){msgs.slice(last).forEach(m=>{const msg=JSON.parse(m);if(msg.sender==='admin'){A(msg.text,'f');u++;B()}});last=msgs.length}}catch(e){}}const S=async()=>{const v=i.value.trim();if(!v)return;A(v,'g');i.value='';await send(v)};b.onclick=()=>{if(drag)return;o=!o;if(o){G();c.style.display='flex';u=0;B();if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f');check();poll=setInterval(check,3000)}else{c.style.display='none';clearInterval(poll)}};l.onclick=()=>{c.style.display='none';o=0;clearInterval(poll)};j.onclick=S;i.onkeydown=x=>x.key=='Enter'&&S();k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};const move=ev=>{drag=1;const t=ev.touches?ev.touches[0]:ev;b.style.bottom=b.style.right="auto";b.style.left=(lx+t.clientX-x)+"px";b.style.top=(ly+t.clientY-y)+"px"};const start=ev=>{drag=0;const t=ev.touches?ev.touches[0]:ev;x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;document.onmousemove=document.ontouchmove=move;document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}};b.onmousedown=b.ontouchstart=start;b.ondragstart=ev=>ev.preventDefault();addEventListener('resize',()=>{if(o)G()});
+const API_URL = "https://www.divinedistrictassembly-mityana.org/api/chat"; // <-- CHANGE THIS
 
+const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};const G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'};
+
+async function send(t){
+  await fetch(API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({sender:'user',text:t,timestamp:Date.now()})
+  })
+}
+
+async function check(){
+  try{
+    const r=await fetch(API_URL);
+    if(!r.ok)return;
+    const msgs=await r.json();
+    if(msgs.length>last){
+      msgs.slice(last).forEach(m=>{
+        const msg=JSON.parse(m);
+        if(msg.sender==='admin'){
+          A(msg.text,'f');u++;B()
+        }
+      });
+      last=msgs.length
+    }
+  }catch(e){}
+}
+
+const S=async()=>{
+  const v=i.value.trim();
+  if(!v)return;
+  A(v,'g');
+  i.value='';
+  await send(v)
+};
+
+b.onclick=()=>{
+  if(drag)return;
+  o=!o;
+  if(o){
+    G();c.style.display='flex';u=0;B();
+    if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f');
+    check();poll=setInterval(check,3000)
+  }else{
+    c.style.display='none';clearInterval(poll)
+  }
+};
+
+l.onclick=()=>{c.style.display='none';o=0;clearInterval(poll)};
+j.onclick=S;
+i.onkeydown=x=>x.key=='Enter'&&S();
+k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
+
+const move=ev=>{drag=1;const t=ev.touches?ev.touches[0]:ev;b.style.bottom=b.style.right="auto";b.style.left=(lx+t.clientX-x)+"px";b.style.top=(ly+t.clientY-y)+"px"};
+const start=ev=>{drag=0;const t=ev.touches?ev.touches[0]:ev;x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;document.onmousemove=document.ontouchmove=move;document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}};
+b.onmousedown=b.ontouchstart=start;b.ondragstart=ev=>ev.preventDefault();
+addEventListener('resize',()=>{if(o)G()});
 // PDF button - open chat and auto-send message
 document.getElementById('pdf-btn').onclick=function(){
   if(!o){b.click()}

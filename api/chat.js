@@ -12,6 +12,12 @@ const redis = new Redis({
 });
 
 export default async function handler(req, res) {
+  // ADD THIS: Allow your website to call this API
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
   try {
     if (req.method === 'POST') {
       const { sender, text } = req.body;
@@ -19,6 +25,7 @@ export default async function handler(req, res) {
       
       const newMessage = { sender, text, timestamp: Date.now() };
       await redis.rpush('chat:messages', JSON.stringify(newMessage));
+      await redis.ltrim('chat:messages', -200, -1); // keep only last 200 messages
       return res.status(200).json({ success: true });
     }
 
