@@ -2,198 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Chat Dashboard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; display: flex; height: 100vh; overflow: hidden; }
-        
-        /* Sidebar Navigation Column */
-        #sidebar { width: 220px; min-width: 170px; background: #2c3e50; color: white; display: flex; flex-direction: column; border-right: 1px solid #1a252f; }
-        .sidebar-header { padding: 15px 10px; background: #1a252f; text-align: center; font-weight: bold; font-size: 1rem; }
-        #room-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-        .room-item { padding: 12px 12px; border-bottom: 1px solid #34495e; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; transition: background 0.2s; word-break: break-all; }
-        .room-item:hover { background: #34495e; }
-        .room-item.active { background: #007bff; }
-        .badge { background: #dc3545; color: white; border-radius: 10px; padding: 2px 8px; font-size: 0.75rem; font-weight: bold; margin-left: 4px; }
-
-        /* Main Dialogue Field Layout */
-        #main-chat { flex: 1; display: flex; flex-direction: column; background: #fff; min-width: 0; }
-        header { background: #007bff; color: white; padding: 15px; text-align: center; font-size: 1.1rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; }
-        
-        .msg-row { display: flex; gap: 8px; align-items: flex-end; }
-        .msg-row.user { justify-content: flex-start; }
-        .msg-row.admin { justify-content: flex-end; }
-        .msg { max-width: 75%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; }
-        .user { background: #ffffff; border: 1px solid #e0e0e0; color: #333; }
-        .admin { background: #007bff; color: white; }
-        
-        .input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #ddd; gap: 8px; }
-        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 1rem; min-width: 0; }
-        button { background: #007bff; color: white; border: none; padding: 0 20px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 1rem; white-space: nowrap; }
-        button:hover { background: #0056b3; }
-        .no-room-selected { display: flex; flex: 1; align-items: center; justify-content: center; color: #7f8c8d; font-size: 1rem; text-align: center; padding: 20px; }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:Arial,sans-serif;background:#f4f7f6;display:flex;height:100vh;overflow:hidden;}
+        #sidebar{width:280px;min-width:240px;background:#2c3e50;color:#fff;display:flex;flex-direction:column;border-right:1px solid #1a252f;z-index:10;transition:transform .25s ease;}
+        .sb-hd{padding:15px 12px;background:#1a252f;text-align:center;font-weight:bold;font-size:1rem;}
+        #room-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+        .room-item{padding:14px 12px;border-bottom:1px solid #34495e;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;word-break:break-all;}
+        .room-item:hover{background:#34495e;}.room-item.active{background:#007bff;}
+        .badge{background:#dc3545;color:#fff;border-radius:10px;padding:2px 7px;font-size:.75rem;font-weight:bold;margin-left:5px;}
+        #main-chat{flex:1;display:flex;flex-direction:column;background:#efeae2;min-width:0;position:relative;z-index:5;}
+        header{background:#007bff;color:#fff;padding:12px;text-align:center;font-size:1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:10px;}
+        #back-btn{display:none;background:none;border:none;color:#fff;font-size:1.3rem;font-weight:bold;cursor:pointer;padding:0 5px;margin-right:auto;}
+        #chat-window{flex:1;padding:15px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+        .msg-row{display:flex;gap:8px;align-items:flex-end;width:100%;}
+        .msg-row.user{justify-content:flex-start;}.msg-row.admin{justify-content:flex-end;}
+        .msg{max-width:75%;padding:9px 12px;border-radius:10px;font-size:.9rem;line-height:1.3;word-wrap:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.1);}
+        .user{background:#fff;border:1px solid #e0e0e0;color:#333;border-top-left-radius:0;}
+        .admin{background:#d9fdd3;color:#333;border-top-right-radius:0;}
+        .input-area{display:flex;padding:10px;background:#f0f2f5;border-top:1px solid #ddd;gap:8px;align-items:center;z-index:9999;position:relative;}
+        input{flex:1;padding:10px 14px;border:1px solid #fff;border-radius:20px;outline:none;font-size:.95rem;min-width:0;background:#fff;box-shadow:0 1px 1px rgba(0,0,0,0.05);position:relative;z-index:10000;-webkit-user-select:text;user-select:text;}
+        input:focus{border-color:#007bff;}
+        button{background:#007bff;color:#fff;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:.95rem;white-space:nowrap;position:relative;z-index:10000;}
+        button:hover{background:#0056b3;}
+        .no-room-selected{display:flex;flex:1;align-items:center;justify-content:center;color:#7f8c8d;font-size:.95rem;text-align:center;padding:15px;background:#f8f9fa;}
+        @media (max-width:768px){
+            body{position:relative;}
+            #sidebar{width:100%;max-width:100%;position:absolute;left:0;top:0;height:100%;transform:translateX(0);}
+            #main-chat{position:absolute;left:0;top:0;width:100%;height:100%;transform:translateX(100%);}
+            body.viewing-chat #sidebar{transform:translateX(-100%);}
+            body.viewing-chat #main-chat{transform:translateX(0);}
+            body.viewing-chat #back-btn{display:block;}
+        }
     </style>
 </head>
 <body>
-
 <script>
-const ADMIN_PASS = "Mityana9";
-if(sessionStorage.getItem('adminAuth') !== 'true'){
-  const pass = prompt("🔒 Admin Login Required\nEnter Password:");
-  if(pass !== ADMIN_PASS){
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;color:#dc3545'>Access Denied</h2>";
-    throw new Error("Unauthorized");
-  } else { sessionStorage.setItem('adminAuth', 'true'); }
+const ADMIN_PASS="Mityana9";
+if(sessionStorage.getItem('adminAuth')!=='true'){
+  const p=prompt("🔒 Admin Login Required\nEnter Password:");
+  if(p!==ADMIN_PASS){document.body.innerHTML="<h2 style='text-align:center;margin-top:100px;color:#dc3545'>Access Denied</h2>";throw new Error("!");}
+  else{sessionStorage.setItem('adminAuth','true');}
 }
 </script>
-
 <div id="sidebar">
-    <div class="sidebar-header">Active Inbox Channels</div>
+    <div class="sb-hd">Active Channels</div>
     <div id="room-list"></div>
 </div>
-
 <div id="main-chat">
-    <header id="chat-header">Select a chat room to start support</header>
-    <div id="chat-window" class="no-room-selected">No Active Chat Window Mounted</div>
-    <div class="input-area" style="display: none;" id="input-container">
-        <input type="text" id="admin-message" placeholder="Type your reply here..." autocomplete="off">
+    <header><button id="back-btn" onclick="closeChat()">←</button><span id="chat-header">Select a chat room</span></header>
+    <div id="chat-window" class="no-room-selected">No Chat Mounted</div>
+    <div class="input-area" style="display:none;" id="input-container">
+        <input type="text" id="admin-message" placeholder="Type reply here..." autocomplete="off">
         <button id="send-btn">Send</button>
     </div>
 </div>
-
 <script>
-    // FIXED: Switched to relative pathing to permanently destroy the 307 redirect error blocks
-    const API_URL = "/api/chat";
-    let selectedRoomId = null;
-    let totalMessagesSeen = 0;
-    const inputField = document.getElementById('admin-message');
-    const sendButton = document.getElementById('send-btn');
-
-    // UNBREAK DESKTOP KEYBOARD ENTRY FOCUS HOOKS
-    if(inputField) {
-      inputField.addEventListener('mousedown', (e) => e.stopPropagation(), { capture: true });
-      inputField.addEventListener('click', (e) => { e.stopPropagation(); inputField.focus(); }, { capture: true });
-      inputField.addEventListener('keydown', (e) => {
-          e.stopPropagation();
-          if(e.key === 'Enter') { e.preventDefault(); sendAdminReply(); }
-      }, { capture: true });
+    const API_URL="/api/chat";let selectedRoomId=null,totalMessagesSeen=0;
+    const inputField=document.getElementById('admin-message'),sendButton=document.getElementById('send-btn');
+    if(inputField){
+      inputField.addEventListener('mousedown',e=>e.stopPropagation(),{capture:true});
+      inputField.addEventListener('click',e=>{e.stopPropagation();inputField.focus();},{capture:true});
+      inputField.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();sendReply();}},{capture:true});
     }
-
-    async function loadDashboardChannels() {
-        try {
-            const r = await fetch(`${API_URL}?type=list`);
-            if (!r.ok) return;
-            const rooms = await r.json();
-            
-            const listContainer = document.getElementById('room-list');
-            listContainer.innerHTML = '';
-
-            // Sort rooms by most recently active
-            rooms.sort((a,b) => b.lastActive - a.lastActive);
-
-            rooms.forEach(room => {
-                const item = document.createElement('div');
-                item.className = `room-item ${selectedRoomId === room.id ? 'active' : ''}`;
-                
-                const label = document.createElement('span');
-                label.textContent = `💬 ${room.id}`;
-                item.appendChild(label);
-                
-                // Append unread red count bubble if active
-                if (room.adminUnread > 0 && selectedRoomId !== room.id) {
-                    const badge = document.createElement('span');
-                    badge.className = 'badge';
-                    badge.textContent = room.adminUnread;
-                    item.appendChild(badge);
+    async function loadRooms(){
+        try{
+            const r=await fetch(`${API_URL}?type=list`);if(!r.ok)return;const rms=await r.json();
+            const box=document.getElementById('room-list');box.innerHTML='';
+            rms.sort((a,b)=>b.lastActive-a.lastActive);
+            rms.forEach(rm=>{
+                const el=document.createElement('div');el.className=`room-item ${selectedRoomId===rm.id?'active':''}`;
+                el.innerHTML=`<span>💬 ${rm.id}</span>`;
+                if(rm.adminUnread>0&&selectedRoomId!==rm.id){
+                    const bd=document.createElement('span');bd.className='badge';bd.textContent=rm.adminUnread;el.appendChild(bd);
                 }
-
-                item.onclick = () => switchChatRoom(room.id);
-                listContainer.appendChild(item); 
+                el.onclick=()=>openRoom(rm.id);box.appendChild(el);
             });
-        } catch(e) {}
+        }catch(e){}
     }
-
-    async function switchChatRoom(roomId) {
-        selectedRoomId = roomId;
-        totalMessagesSeen = 0;
-        
-        document.getElementById('chat-header').textContent = `Support Channel: ${roomId}`;
-        const win = document.getElementById('chat-window');
-        win.className = '';
-        win.innerHTML = '';
-        document.getElementById('input-container').style.display = 'flex';
-
-        // Notify server to clear out unread counters for the admin
-        await fetch(API_URL, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roomId: selectedRoomId, clearFor: 'admin' })
-        });
-
-        fetchRoomMessages();
+    async function openRoom(id){
+        selectedRoomId=id;totalMessagesSeen=0;document.getElementById('chat-header').textContent=id;
+        const win=document.getElementById('chat-window');win.className='';win.innerHTML='';
+        document.getElementById('input-container').style.display='flex';document.body.classList.add('viewing-chat');
+        await fetch(API_URL,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})});
+        getMessages();
     }
-
-    async function fetchRoomMessages() {
-        if (!selectedRoomId) return;
-        try {
-            const r = await fetch(`${API_URL}?roomId=${selectedRoomId}`);
-            if (!r.ok) return;
-            const data = await r.json();
-
-            if (data.messages.length !== totalMessagesSeen) {
-                renderMessages(data.messages);
-                totalMessagesSeen = data.messages.length;
-                
-                // Safe dynamic unread count reset check execution logic loops
-                await fetch(API_URL, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ roomId: selectedRoomId, clearFor: 'admin' })
+    function closeChat(){
+        document.body.classList.remove('viewing-chat');selectedRoomId=null;totalMessagesSeen=0;
+        document.getElementById('chat-header').textContent="Select a chat room";
+        const win=document.getElementById('chat-window');win.className='no-room-selected';win.innerHTML="No Chat Mounted";
+        document.getElementById('input-container').style.display='none';loadRooms();
+    }
+    async function getMessages(){
+        if(!selectedRoomId)return;
+        try{
+            const r=await fetch(`${API_URL}?roomId=${selectedRoomId}`);if(!r.ok)return;const d=await r.json();
+            if(d.messages.length!==totalMessagesSeen){
+                const win=document.getElementById('chat-window');const fsc=(document.activeElement===inputField);win.innerHTML='';
+                d.messages.forEach(mStr=>{
+                    try{
+                        const m=JSON.parse(mStr);const row=document.createElement('div');row.className=`msg-row ${m.sender}`;
+                        row.innerHTML=`<div class="msg ${m.sender}">${m.text}</div>`;win.appendChild(row);
+                    }catch(e){}
                 });
+                win.scrollTop=win.scrollHeight;if(fsc)inputField.focus();totalMessagesSeen=d.messages.length;
+                await fetch(API_URL,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})});
             }
-        } catch(e) {}
+        }catch(e){}
     }
-
-    function renderMessages(messages) {
-        const win = document.getElementById('chat-window');
-        const wasFocused = (document.activeElement === inputField);
-        win.innerHTML = '';
-
-        messages.forEach(msgStr => {
-            try {
-                const msg = JSON.parse(msgStr);
-                const row = document.createElement('div');
-                row.className = `msg-row ${msg.sender}`;
-                row.innerHTML = `<div class="msg ${msg.sender}">${msg.text}</div>`;
-                win.appendChild(row);
-            } catch(e) {}
-        });
-        win.scrollTop = win.scrollHeight;
-        if(wasFocused) inputField.focus();
+    async function sendReply(){
+        const txt=inputField.value.trim();if(!txt||!selectedRoomId)return;inputField.value='';
+        try{
+            await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'admin',text:txt,roomId:selectedRoomId})});
+            getMessages();
+        }catch(e){}
     }
-
-    async function sendAdminReply() {
-        const text = inputField.value.trim();
-        if (!text || !selectedRoomId) return;
-        inputField.value = '';
-
-        try {
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sender: 'admin', text: text, roomId: selectedRoomId })
-            });
-            fetchRoomMessages();
-        } catch(e) {}
-    }
-
-    sendButton.onclick = sendAdminReply;
-
-    // Background sync intervals
-    setInterval(loadDashboardChannels, 3000);
-    setInterval(fetchRoomMessages, 3000);
-    loadDashboardChannels();
+    sendButton.onclick=sendReply;setInterval(loadRooms,3000);setInterval(getMessages,3000);loadRooms();
 </script>
 </body>
 </html>
