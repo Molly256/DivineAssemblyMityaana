@@ -300,16 +300,14 @@ function t(i){
 // Chat widget - Connected to API + Admin
 const API_URL = "/api/chat"; 
 
+// 1. Lock in the unique counter identity directly inside permanent device storage cache
 let myRoomId = localStorage.getItem('chat_room_id');
 
 const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;
 
-// Updates the red badge notification count bubble
 const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};
-
 const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};const G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'};
 
-// Force-enable desktop inputs and layer the chat window on top of layout elements
 if(c){c.style.zIndex="999999";c.style.pointerEvents="auto";}
 if(i){
   i.style.pointerEvents="auto";i.style.userSelect="text";i.style.webkitUserSelect="text";i.style.cursor="text";
@@ -319,7 +317,7 @@ if(i){
 }
 if(j){j.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);}
 
-// FIXED: Claims a permanent incremental numeric user ID sequentially from your api/chat.js backend
+// ASYNC REGISTRATION: Claims a permanent User serial tracking index ID from your Vercel DB
 async function initializeUserIdentity() {
     if (!myRoomId) {
         try {
@@ -327,15 +325,14 @@ async function initializeUserIdentity() {
             if (res.ok) {
                 const data = await res.json();
                 myRoomId = data.roomId;
-                localStorage.setItem('chat_room_id', myRoomId);
+                localStorage.setItem('chat_room_id', myRoomId); // Saves permanently on their phone/PC
             }
         } catch (err) {
-            console.error("Identity retrieval failure fallback:", err);
+            console.error("Identity collection drop fallback:", err);
         }
     }
 }
 
-// Sends current Room ID to database session route
 async function send(t){
   if (!myRoomId) await initializeUserIdentity();
   if (!myRoomId) return;
@@ -347,7 +344,6 @@ async function send(t){
   }).catch(()=>A('⚠️ Failed to send message','f'))
 }
 
-// Polls server channel history using Room ID parameters
 async function check(){
   if (!myRoomId) return;
   try{
@@ -371,12 +367,26 @@ async function check(){
     }
 
     const messageList = data.messages || [];
+    
+    // FIXED RESTORATION: Re-renders the whole thread correctly if a user leaves and returns
+    if (e.children.length === 0 && messageList.length > 0) {
+        last = 0; 
+    }
+
     if(messageList.length>last){
       messageList.slice(last).forEach(m=>{
-        const msg=JSON.parse(m);
-        if(msg.sender==='admin'){
-          A(msg.text,'f');
-        }
+        try {
+            let txt = ""; let cls = "f";
+            if (typeof m === 'object' && m !== null) {
+                txt = m.text; cls = (m.sender === 'admin') ? 'f' : 'g';
+            } else if (typeof m === 'string') {
+                if (m.startsWith("{")) {
+                    const parsed = JSON.parse(m);
+                    txt = parsed.text; cls = (parsed.sender === 'admin') ? 'f' : 'g';
+                } else { txt = m; }
+            }
+            if (txt) A(txt, cls);
+        } catch(err){}
       });
       last=messageList.length
     }
@@ -386,9 +396,10 @@ async function check(){
 const S=async()=>{
   const v=i.value.trim();
   if(!v)return;
-  A(v,'g');
   i.value='';
-  await send(v)
+  await send(v);
+  // Instantly poll locally so it updates immediately on skin layout
+  setTimeout(check, 100);
 };
 
 b.onclick=async()=>{
@@ -406,9 +417,13 @@ b.onclick=async()=>{
           body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })
         }).catch(()=>{});
     }
+    
+    // Clear display slate to force complete, clean history redrawing logs
+    e.innerHTML = '';
+    last = 0;
 
-    if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f');
-    check();if(!poll)poll=setInterval(check,3000)
+    await check();
+    if(!poll) poll = setInterval(check,3000)
   }else{
     c.style.display='none';c.onclick = null;
   }
@@ -422,7 +437,7 @@ k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
 const move=ev=>{
   if(!o){
     drag=1;
-    const t=ev.touches?ev.touches[0]:ev;
+    const t=ev.touches?ev.touches:ev;
     b.style.bottom=b.style.right="auto";
     b.style.left=(lx+t.clientX-x)+"px";
     b.style.top=(ly+t.clientY-y)+"px";
@@ -435,7 +450,7 @@ const start=ev=>{
   }
   if(!o){
     drag=0;
-    const t=ev.touches?ev.touches[0]:ev;
+    const t=ev.touches?ev.touches:ev;
     x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;
     document.onmousemove=document.ontouchmove=move;
     document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}
@@ -465,7 +480,7 @@ const observer = new IntersectionObserver(entries=>{
 },{threshold:0.5});
 sections.forEach(s=>observer.observe(s));
 
-// FIXED INIT SEQUENCE: Resolves user identity before triggering continuous message checks
+// Initialize user ID check routine loop paths on startup
 initializeUserIdentity().then(() => {
     setInterval(check, 4000);
     check();
