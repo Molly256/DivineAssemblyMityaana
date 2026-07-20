@@ -298,9 +298,9 @@ function t(i){
 }
 
 // Chat widget - Connected to API + Admin
-const API_URL = "https://divinedistrictassembly-mityana.org"; 
+const API_URL = "https://www.divinedistrictassembly-mityana.org/api/chat"; 
 
-// 1. Generate or retrieve a permanent unique Room ID for this specific user session
+// Generate or retrieve a permanent unique Room ID for this specific user session
 let myRoomId = localStorage.getItem('chat_room_id');
 if (!myRoomId) {
     myRoomId = 'User_' + Math.random().toString(36).substring(2, 9).toUpperCase();
@@ -324,7 +324,7 @@ if(i){
 }
 if(j){j.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);}
 
-// FIXED: Sends current Room ID to database session route
+// Sends current Room ID to database session route
 async function send(t){
   await fetch(API_URL,{
     method:'POST',
@@ -333,14 +333,13 @@ async function send(t){
   }).catch(()=>A('⚠️ Failed to send message','f'))
 }
 
-// FIXED: Polls server channel history using Room ID parameters and logs unread metrics
+// Polls server channel history using Room ID parameters
 async function check(){
   try{
     const r=await fetch(`${API_URL}?roomId=${myRoomId}`);
     if(!r.ok)return;
     const data = await r.json();
     
-    // Clear notifications continuously if the panel is wide open
     if (o) {
       if(data.userUnread > 0) {
         await fetch(API_URL, {
@@ -352,19 +351,19 @@ async function check(){
       u = 0;
       B();
     } else {
-      // Sync local badge counter with database values if panel is closed
-      u = data.userUnread;
+      u = data.userUnread || 0;
       B();
     }
 
-    if(data.messages.length>last){
-      data.messages.slice(last).forEach(m=>{
+    const messageList = data.messages || [];
+    if(messageList.length>last){
+      messageList.slice(last).forEach(m=>{
         const msg=JSON.parse(m);
         if(msg.sender==='admin'){
           A(msg.text,'f');
         }
       });
-      last=data.messages.length
+      last=messageList.length
     }
   }catch(e){}
 }
@@ -383,7 +382,6 @@ b.onclick=async()=>{
   if(o){
     G();c.style.display='flex';c.onclick = (ev) => ev.stopPropagation(); u=0;B();
     
-    // Tell the database to reset unread counters immediately upon opening chat panel
     await fetch(API_URL, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -402,7 +400,6 @@ j.onclick=S;
 i.onkeydown=x=>x.key=='Enter'&&S();
 k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
 
-// FIXED: Only allow drag when chat is CLOSED
 const move=ev=>{
   if(!o){
     drag=1;
@@ -428,7 +425,6 @@ const start=ev=>{
 b.onmousedown=b.ontouchstart=start;b.ondragstart=ev=>ev.preventDefault();
 addEventListener('resize',()=>{if(o)G()});
 
-// PDF button - open chat and auto-send message
 document.getElementById('pdf-btn').onclick=function(){
   if(!o){b.click()}
   setTimeout(()=>{
@@ -437,12 +433,12 @@ document.getElementById('pdf-btn').onclick=function(){
   },300);
 };
 
-// ADDED: Highlight active nav on scroll
 const sections = document.querySelectorAll('section');
+const activeNavTabs = document.querySelectorAll('.t'); 
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
-      tabs.forEach(t=>t.classList.remove('active'));
+      activeNavTabs.forEach(t=>t.classList.remove('active'));
       const id = entry.target.getAttribute('id');
       document.querySelector(`.t[href="#${id}"]`)?.classList.add('active');
     }
@@ -450,7 +446,6 @@ const observer = new IntersectionObserver(entries=>{
 },{threshold:0.5});
 sections.forEach(s=>observer.observe(s));
 
-// Silent background synchronization loop to update badges even when minimized
 setInterval(check, 4000);
 check();
 </script>

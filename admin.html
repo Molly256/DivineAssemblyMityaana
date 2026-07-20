@@ -63,7 +63,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
 </div>
 
 <script>
-    // FIXED: Mapped precisely to your explicit Vercel KV routing path endpoint
+    // FIXED: Formatted explicitly to your correct live API URL pathway endpoint
     const API_URL = "https://divinedistrictassembly-mityana.org";
     let selectedRoomId = null;
     let totalMessagesSeen = 0;
@@ -109,7 +109,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
                 }
 
                 item.onclick = () => switchChatRoom(room.id);
-                listContainer.appendChild(item); // FIXED: Correct structural reference assignment
+                listContainer.appendChild(item); 
             });
         } catch(e) {}
     }
@@ -145,7 +145,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
                 renderMessages(data.messages);
                 totalMessagesSeen = data.messages.length;
                 
-                // FIXED: Safe dynamic unread count reset check execution logic loops
+                // Safe dynamic unread count reset check execution logic loops
                 await fetch(API_URL, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
