@@ -63,8 +63,8 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
 </div>
 
 <script>
-    // FIXED: Formatted explicitly to your correct live API URL pathway endpoint
-    const API_URL = "https://divinedistrictassembly-mityana.org";
+    // FIXED: Switched to relative pathing to permanently destroy the 307 redirect error blocks
+    const API_URL = "/api/chat";
     let selectedRoomId = null;
     let totalMessagesSeen = 0;
     const inputField = document.getElementById('admin-message');
