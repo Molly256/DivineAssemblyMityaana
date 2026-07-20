@@ -363,6 +363,10 @@ const move=ev=>{
   }
 };
 const start=ev=>{
+  const targetId = ev.target.id;
+  if (targetId === 'i' || targetId === 'j' || ev.target.tagName === 'INPUT' || ev.target.tagName === 'BUTTON') {
+    return; 
+  }
   if(!o){
     drag=0;
     const t=ev.touches?ev.touches[0]:ev;
