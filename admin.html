@@ -2,41 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <title>Chat Admin</title>
     <style>
         *{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:Arial,sans-serif;background:#111b21;display:flex;height:100vh;overflow:hidden;}
+        body{font-family:Arial,sans-serif;background:#111b21;display:flex;height:100vh;height:-webkit-fill-available;overflow:hidden;}
         #sidebar{width:100%;background:#111b21;color:#e9edef;display:flex;flex-direction:column;border-right:1px solid #222e35;z-index:10;transition:transform .2s ease;}
-        .shd{padding:14px;background:#202c33;font-weight:bold;font-size:1.1rem;box-shadow:0 1px 2px rgba(0,0,0,0.3);display:flex;justify-content:space-between;align-items:center;}
-        .refresh-btn {background:#00a884;color:#111b21;border:none;padding:5px 12px;border-radius:15px;font-size:0.8rem;font-weight:bold;cursor:pointer;}
+        .shd{padding:12px;background:#202c33;font-weight:bold;font-size:1rem;display:flex;justify-content:space-between;align-items:center;}
+        .ref-btn{background:#00a884;color:#111b21;border:none;padding:4px 10px;border-radius:12px;font-size:.75rem;font-weight:bold;cursor:pointer;}
         #room-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
-        .rm-it{padding:14px;border-bottom:1px solid #222e35;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;word-break:break-all;}
+        .rm-it{padding:12px;border-bottom:1px solid #222e35;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:.85rem;word-break:break-all;}
         .rm-it:hover{background:#202c33;}.rm-it.active{background:#2a3942;}
-        .badge{background:#00a884;color:#111b21;border-radius:10px;padding:2px 6px;font-size:.7rem;font-weight:bold;margin-left:4px;}
+        .badge{background:#00a884;color:#111b21;border-radius:10px;padding:1px 5px;font-size:.65rem;font-weight:bold;margin-left:4px;}
         #main-chat{flex:1;display:flex;flex-direction:column;background:#0b141a;min-width:0;position:relative;z-index:5;transition:transform .2s ease;}
-        header{background:#202c33;color:#e9edef;padding:12px;text-align:center;font-size:1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:10px;}
-        #back-btn{display:none;background:none;border:none;color:#00a884;font-size:1.4rem;font-weight:bold;cursor:pointer;padding:0 5px;margin-right:auto;}
-        #chat-window{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background-image:linear-gradient(rgba(11,20,26,0.93),rgba(11,20,26,0.93)),url('https://githubusercontent.com');background-size:contain;}
-        .msg-row{display:flex;gap:6px;align-items:flex-end;width:100%;}
+        header{background:#202c33;color:#e9edef;padding:10px;text-align:center;font-size:.95rem;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:8px;}
+        #back-btn{display:none;background:none;border:none;color:#00a884;font-size:1.3rem;font-weight:bold;cursor:pointer;padding:0 4px;margin-right:auto;}
+        #chat-window{flex:1;padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background-image:linear-gradient(rgba(11,20,26,0.93),rgba(11,20,26,0.93)),url('https://githubusercontent.com');background-size:contain;}
+        .msg-row{display:flex;gap:4px;align-items:flex-end;width:100%;}
         .msg-row.user{justify-content:flex-start;}.msg-row.admin{justify-content:flex-end;}
-        .msg{max-width:78%;padding:8px 12px;border-radius:10px;font-size:.9rem;line-height:1.3;word-wrap:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.15);}
+        .msg{max-width:80%;padding:7px 10px;border-radius:8px;font-size:.85rem;line-height:1.25;word-wrap:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.15);}
         .user{background:#202c33;color:#e9edef;border-top-left-radius:0;}
         .admin{background:#005c4b;color:#e9edef;border-top-right-radius:0;}
-        .input-area{display:flex;padding:10px;background:#202c33;border-top:1px solid #222e35;gap:8px;align-items:center;z-index:9999;position:relative;}
-        input{flex:1;padding:10px 14px;border:none;border-radius:20px;outline:none;font-size:.95rem;min-width:0;background:#2a3942;color:#fff;position:relative;z-index:10000;-webkit-user-select:text;user-select:text;}
+        .input-area{display:flex;padding:8px;background:#202c33;border-top:1px solid #222e35;gap:6px;align-items:center;z-index:9999;position:relative;}
+        input{flex:1;padding:8px 12px;border:none;border-radius:18px;outline:none;font-size:.9rem;min-width:0;background:#2a3942;color:#fff;position:relative;z-index:10000;-webkit-user-select:text;user-select:text;}
         input::placeholder{color:#8696a0;}
-        button#send-btn{background:#00a884;color:#111b21;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:.95rem;position:relative;z-index:10000;}
-        .no-room-selected{display:flex;flex:1;align-items:center;justify-content:center;color:#8696a0;font-size:.9rem;text-align:center;padding:15px;background:#111b21;}
+        button#send-btn{background:#00a884;color:#111b21;border:none;padding:8px 14px;border-radius:18px;font-weight:bold;cursor:pointer;font-size:.9rem;position:relative;z-index:10000;}
+        .no-room-selected{display:flex;flex:1;align-items:center;justify-content:center;color:#8696a0;font-size:.85rem;text-align:center;padding:12px;background:#111b21;}
         @media(max-width:768px){
-            body{position:relative;}
+            body,html{height:100vh;height:-webkit-fill-available;}
             #sidebar{width:100%;max-width:100%;position:absolute;left:0;top:0;height:100%;transform:translateX(0);}
             #main-chat{position:absolute;left:0;top:0;width:100%;height:100%;transform:translateX(100%);}
             body.viewing-chat #sidebar{transform:translateX(-100%);}
             body.viewing-chat #main-chat{transform:translateX(0);}
             body.viewing-chat #back-btn{display:block;}
         }
-        @media(min-width:769px){#sidebar{width:300px;}#back-btn{display:none!important;}}
+        @media(min-width:769px){#sidebar{width:280px;}#back-btn{display:none!important;}}
     </style>
 </head>
 <body>
@@ -48,15 +48,9 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
   else{sessionStorage.setItem('adminAuth','true');}
 }
 </script>
-<div id="sidebar">
-    <div class="shd">
-        <span>Active Channels</span>
-        <button class="refresh-btn" onclick="loadRooms()">Sync 🔄</button>
-    </div>
-    <div id="room-list"></div>
-</div>
+<div id="sidebar"><div class="shd"><span id="sys-status">Channels</span><button class="ref-btn" onclick="loadRooms()">Sync 🔄</button></div><div id="room-list"></div></div>
 <div id="main-chat">
-    <header><button id="back-btn" onclick="closeChat()">←</button><span id="chat-header">Select a chat room</span></header>
+    <header><button id="back-btn" onclick="closeChat()">←</button><span id="chat-header">Select a room</span></header>
     <div id="chat-window" class="no-room-selected">No Chat Mounted</div>
     <div class="input-area" style="display:none;" id="input-container">
         <input type="text" id="admin-message" placeholder="Type reply here..." autocomplete="off">
@@ -64,93 +58,77 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
     </div>
 </div>
 <script>
-    const API_URL = "/api/chat";
-    let selectedRoomId = null, totalMessagesSeen = -1, isFetching = false;
-    const inputField = document.getElementById('admin-message'), sendButton = document.getElementById('send-btn');
-    
+    const API_URL="/api/chat";let selectedRoomId=null,totalMessagesSeen=-1,isFetching=false;
+    const inputField=document.getElementById('admin-message'),sendButton=document.getElementById('send-btn');
     if(inputField){
-      inputField.style.pointerEvents = "auto";
-      inputField.addEventListener('mousedown', e => e.stopPropagation(), {capture:true});
-      inputField.addEventListener('touchstart', e => e.stopPropagation(), {passive:true});
-      inputField.addEventListener('click', e => { e.stopPropagation(); inputField.focus(); }, {capture:true});
-      inputField.addEventListener('keydown', e => { e.stopPropagation(); if(e.key==='Enter'){e.preventDefault(); sendReply();} }, {capture:true});
+      inputField.style.pointerEvents="auto";inputField.style.userSelect="text";inputField.style.webkitUserSelect="text";
+      inputField.addEventListener('mousedown',e=>e.stopPropagation(),{capture:true});
+      inputField.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+      inputField.addEventListener('click',e=>{e.stopPropagation();inputField.focus();},{capture:true});
+      inputField.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();sendReply();}},{capture:true});
     }
-
     async function loadRooms(){
         try{
-            const r = await fetch(`${API_URL}?type=list`); if(!r.ok) return; const rms = await r.json();
-            const box = document.getElementById('room-list'); box.innerHTML = '';
-            rms.sort((a,b) => b.lastActive - a.lastActive);
-            rms.forEach(rm => {
-                const el = document.createElement('div'); el.className = `rm-it ${selectedRoomId===rm.id?'active':''}`;
-                el.innerHTML = `<span>💬 ${rm.id}</span>`;
-                if(rm.adminUnread > 0 && selectedRoomId !== rm.id){
-                    const bd = document.createElement('span'); bd.className = 'badge'; bd.textContent = rm.adminUnread; el.appendChild(bd);
+            const r=await fetch(`${API_URL}?type=list`);if(!r.ok){document.getElementById('sys-status').textContent="⚠️ Error";return;}
+            const rms=await r.json();document.getElementById('sys-status').textContent="Live Channels 🟢";
+            const box=document.getElementById('room-list');box.innerHTML='';
+            rms.sort((a,b)=>b.lastActive-a.lastActive);
+            rms.forEach(rm=>{
+                const el=document.createElement('div');el.className=`rm-it ${selectedRoomId===rm.id?'active':''}`;
+                el.innerHTML=`<span>💬 ${rm.id}</span>`;
+                if(rm.adminUnread>0&&selectedRoomId!==rm.id){
+                    const bd=document.createElement('span');bd.className='badge';bd.textContent=rm.adminUnread;el.appendChild(bd);
                 }
-                el.onclick = () => openRoom(rm.id); box.appendChild(el);
+                el.onclick=()=>openRoom(rm.id);box.appendChild(el);
             });
-        } catch(e){}
+        }catch(e){document.getElementById('sys-status').textContent="❌ Offline";}
     }
-
     function openRoom(id){
-        selectedRoomId = id; totalMessagesSeen = -1; document.getElementById('chat-header').textContent = id;
-        const win = document.getElementById('chat-window'); win.className = ''; win.innerHTML = '';
-        document.getElementById('input-container').style.display = 'flex'; document.body.classList.add('viewing-chat');
-        getMessages(); setTimeout(() => { if(inputField) inputField.focus(); }, 150);
+        selectedRoomId=id;totalMessagesSeen=-1;document.getElementById('chat-header').textContent=id;
+        const win=document.getElementById('chat-window');win.className='';win.innerHTML='';
+        document.getElementById('input-container').style.display='flex';document.body.classList.add('viewing-chat');
+        getMessages();setTimeout(()=>{if(inputField)inputField.focus();},100);
     }
-
     function closeChat(){
-        document.body.classList.remove('viewing-chat'); selectedRoomId = null; totalMessagesSeen = -1;
-        document.getElementById('chat-header').textContent = "Select a chat room";
-        const win = document.getElementById('chat-window'); win.className = 'no-room-selected'; win.innerHTML = "No Chat Mounted";
-        document.getElementById('input-container').style.display = 'none'; loadRooms();
+        document.body.classList.remove('viewing-chat');selectedRoomId=null;totalMessagesSeen=-1;
+        document.getElementById('chat-header').textContent="Select a room";
+        const win=document.getElementById('chat-window');win.className='no-room-selected';win.innerHTML="No Chat Mounted";
+        document.getElementById('input-container').style.display='none';loadRooms();
     }
-
     async function getMessages(){
-        if(!selectedRoomId || isFetching) return;
-        isFetching = true;
+        if(!selectedRoomId||isFetching)return;isFetching=true;
         try{
-            const r = await fetch(`${API_URL}?roomId=${selectedRoomId}`); if(!r.ok) { isFetching = false; return; }
-            const d = await r.json();
-            const messageList = d.messages || [];
-            if(messageList.length !== totalMessagesSeen){
-                const win = document.getElementById('chat-window'); const wasFocused = (document.activeElement === inputField); win.innerHTML = '';
-                messageList.forEach(mStr => {
-                    try {
-                        let parsedText = ""; let currentSender = "user";
-                        if(mStr.startsWith("{")) {
-                            const m = JSON.parse(mStr); parsedText = m.text; currentSender = m.sender;
-                        } else { parsedText = mStr; }
-                        if(parsedText) {
-                            const row = document.createElement('div'); row.className = `msg-row ${currentSender}`;
-                            row.innerHTML = `<div class="msg ${currentSender}">${parsedText}</div>`; win.appendChild(row);
+            const r=await fetch(`${API_URL}?roomId=${selectedRoomId}`);if(!r.ok){isFetching=false;return;}
+            const d=await r.json();const messageList=d.messages||[];
+            if(messageList.length!==totalMessagesSeen){
+                const win=document.getElementById('chat-window');const wasFocused=(document.activeElement===inputField);win.innerHTML='';
+                messageList.forEach(mStr=>{
+                    try{
+                        let parsedText="";let currentSender="user";
+                        if(mStr.startsWith("{")){
+                            const m=JSON.parse(mStr);parsedText=m.text;currentSender=m.sender;
+                        }else{parsedText=mStr;}
+                        if(parsedText){
+                            const row=document.createElement('div');row.className=`msg-row ${currentSender}`;
+                            row.innerHTML=`<div class="msg ${currentSender}">${parsedText}</div>`;win.appendChild(row);
                         }
-                    } catch(err){}
+                    }catch(err){}
                 });
-                win.scrollTop = win.scrollHeight; if(wasFocused && inputField) inputField.focus(); totalMessagesSeen = messageList.length;
-                fetch(API_URL, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({roomId:selectedRoomId, clearFor:'admin'})}).catch(() => {});
+                win.scrollTop=win.scrollHeight;if(wasFocused&&inputField)inputField.focus();totalMessagesSeen=messageList.length;
+                fetch(API_URL,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})}).catch(()=>{});
             }
-        } catch(e){}
-        isFetching = false;
+        }catch(e){}
+        isFetching=false;
     }
-
     async function sendReply(){
-        const txt = inputField.value.trim(); if(!txt || !selectedRoomId) return; inputField.value = '';
+        const txt=inputField.value.trim();if(!txt||!selectedRoomId)return;inputField.value='';
         try{
-            await fetch(API_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({sender:'admin', text:txt, roomId:selectedRoomId})});
-            await getMessages(); setTimeout(() => { if(inputField) inputField.focus(); }, 30);
-        } catch(e){}
+            await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'admin',text:txt,roomId:selectedRoomId})});
+            await getMessages();setTimeout(()=>{if(inputField)inputField.focus();},30);
+        }catch(e){}
     }
-    
-    sendButton.onclick = sendReply;
-
-    // Controlled Sequential Long-Polling replaces aggressive background interval loops
-    async function sequenceLoop() {
-        await loadRooms();
-        await getMessages();
-        setTimeout(sequenceLoop, 4000); // Safely triggers next check only after current request closes
-    }
-    
+    sendButton.onclick=sendReply;
+    async function sequenceLoop(){await loadRooms();await getMessages();setTimeout(sequenceLoop,4000);}
     sequenceLoop();
 </script>
 </body>
