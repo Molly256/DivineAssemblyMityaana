@@ -27,7 +27,7 @@
         input::placeholder{color:#8696a0;}
         button#send-btn{background:#00a884;color:#111b21;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:.95rem;position:relative;z-index:10000;}
         .no-room-selected{display:flex;flex:1;align-items:center;justify-content:center;color:#8696a0;font-size:.9rem;text-align:center;padding:15px;background:#111b21;}
-        @media (max-width:768px){
+        @media(max-width:768px){
             body{position:relative;}
             #sidebar{width:100%;max-width:100%;position:absolute;left:0;top:0;height:100%;transform:translateX(0);}
             #main-chat{position:absolute;left:0;top:0;width:100%;height:100%;transform:translateX(100%);}
@@ -35,7 +35,7 @@
             body.viewing-chat #main-chat{transform:translateX(0);}
             body.viewing-chat #back-btn{display:block;}
         }
-        @media (min-width:769px){#sidebar{width:300px;}#back-btn{display:none!important;}}
+        @media(min-width:769px){#sidebar{width:300px;}#back-btn{display:none!important;}}
     </style>
 </head>
 <body>
@@ -64,10 +64,7 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
       inputField.addEventListener('mousedown',e=>e.stopPropagation(),{capture:true});
       inputField.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
       inputField.addEventListener('click',e=>{e.stopPropagation();inputField.focus();},{capture:true});
-      inputField.addEventListener('keydown',e=> {
-          e.stopPropagation();
-          if(e.key==='Enter'){e.preventDefault();sendReply();}
-      },{capture:true});
+      inputField.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();sendReply();}},{capture:true});
     }
     async function loadRooms(){
         try{
@@ -85,13 +82,10 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
         }catch(e){}
     }
     function openRoom(id){
-        selectedRoomId=id;
-        totalMessagesSeen=-1; // FIXED: Forces immediate history reload on channel switch
-        document.getElementById('chat-header').textContent=id;
+        selectedRoomId=id;totalMessagesSeen=-1;document.getElementById('chat-header').textContent=id;
         const win=document.getElementById('chat-window');win.className='';win.innerHTML='';
         document.getElementById('input-container').style.display='flex';document.body.classList.add('viewing-chat');
-        getMessages();
-        setTimeout(()=>{if(inputField)inputField.focus();},150);
+        getMessages();setTimeout(()=>{if(inputField)inputField.focus();},150);
     }
     function closeChat(){
         document.body.classList.remove('viewing-chat');selectedRoomId=null;totalMessagesSeen=-1;
@@ -103,14 +97,31 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
         if(!selectedRoomId)return;
         try{
             const r=await fetch(`${API_URL}?roomId=${selectedRoomId}`);if(!r.ok)return;const d=await r.json();
-            const messageList = d.messages || [];
+            const messageList=d.messages||[];
             if(messageList.length!==totalMessagesSeen){
                 const win=document.getElementById('chat-window');const wasFocused=(document.activeElement===inputField);win.innerHTML='';
                 messageList.forEach(mStr=>{
                     try{
-                        const m=JSON.parse(mStr);const row=document.createElement('div');row.className=`msg-row ${m.sender}`;
-                        row.innerHTML=`<div class="msg ${m.sender}">${m.text}</div>`;win.appendChild(row);
-                    }catch(e){}
+                        // FIXED: Added a broad try/catch selector logic wrapper to trap unparsed text entries
+                        let parsedText = "";
+                        let currentSender = "user";
+                        
+                        if(mStr.startsWith("{")) {
+                            const m=JSON.parse(mStr);
+                            parsedText = m.text;
+                            currentSender = m.sender;
+                        } else {
+                            // Fallback rendering handles standard plain text strings cleanly
+                            parsedText = mStr;
+                        }
+                        
+                        if(parsedText) {
+                            const row=document.createElement('div');
+                            row.className=`msg-row ${currentSender}`;
+                            row.innerHTML=`<div class="msg ${currentSender}">${parsedText}</div>`;
+                            win.appendChild(row);
+                        }
+                    }catch(err){console.error("Skipped bad message entry:",err)}
                 });
                 win.scrollTop=win.scrollHeight;if(wasFocused&&inputField)inputField.focus();totalMessagesSeen=messageList.length;
                 fetch(API_URL,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})}).catch(()=>{});
