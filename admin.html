@@ -57,17 +57,18 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
     </div>
 </div>
 <script>
-    const API_URL="/api/chat";let selectedRoomId=null,totalMessagesSeen=0;
+    const API_URL="/api/chat";let selectedRoomId=null,totalMessagesSeen=-1;
     const inputField=document.getElementById('admin-message'),sendButton=document.getElementById('send-btn');
-    
     if(inputField){
       inputField.style.pointerEvents="auto";
       inputField.addEventListener('mousedown',e=>e.stopPropagation(),{capture:true});
       inputField.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
       inputField.addEventListener('click',e=>{e.stopPropagation();inputField.focus();},{capture:true});
-      inputField.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();sendReply();}},{capture:true});
+      inputField.addEventListener('keydown',e=> {
+          e.stopPropagation();
+          if(e.key==='Enter'){e.preventDefault();sendReply();}
+      },{capture:true});
     }
-
     async function loadRooms(){
         try{
             const r=await fetch(`${API_URL}?type=list`);if(!r.ok)return;const rms=await r.json();
@@ -83,75 +84,47 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
             });
         }catch(e){}
     }
-
-    // FIXED: Removed blocking await statements from the click routing handler
     function openRoom(id){
         selectedRoomId=id;
-        totalMessagesSeen=0;
+        totalMessagesSeen=-1; // FIXED: Forces immediate history reload on channel switch
         document.getElementById('chat-header').textContent=id;
-        const win=document.getElementById('chat-window');
-        win.className='';
-        win.innerHTML='';
-        document.getElementById('input-container').style.display='flex';
-        document.body.classList.add('viewing-chat');
-        
-        // Execute background fetch loops asynchronously so the UI opens instantly
+        const win=document.getElementById('chat-window');win.className='';win.innerHTML='';
+        document.getElementById('input-container').style.display='flex';document.body.classList.add('viewing-chat');
         getMessages();
         setTimeout(()=>{if(inputField)inputField.focus();},150);
     }
-
     function closeChat(){
-        document.body.classList.remove('viewing-chat');selectedRoomId=null;totalMessagesSeen=0;
+        document.body.classList.remove('viewing-chat');selectedRoomId=null;totalMessagesSeen=-1;
         document.getElementById('chat-header').textContent="Select a chat room";
         const win=document.getElementById('chat-window');win.className='no-room-selected';win.innerHTML="No Chat Mounted";
         document.getElementById('input-container').style.display='none';loadRooms();
     }
-
     async function getMessages(){
         if(!selectedRoomId)return;
         try{
             const r=await fetch(`${API_URL}?roomId=${selectedRoomId}`);if(!r.ok)return;const d=await r.json();
             const messageList = d.messages || [];
-            
-            if(messageList.length!==totalMessagesSeen || totalMessagesSeen===0){
-                const win=document.getElementById('chat-window');
-                const wasFocused=(document.activeElement===inputField);
-                win.innerHTML='';
-                
+            if(messageList.length!==totalMessagesSeen){
+                const win=document.getElementById('chat-window');const wasFocused=(document.activeElement===inputField);win.innerHTML='';
                 messageList.forEach(mStr=>{
                     try{
                         const m=JSON.parse(mStr);const row=document.createElement('div');row.className=`msg-row ${m.sender}`;
                         row.innerHTML=`<div class="msg ${m.sender}">${m.text}</div>`;win.appendChild(row);
                     }catch(e){}
                 });
-                
-                win.scrollTop=win.scrollHeight;
-                if(wasFocused && inputField) inputField.focus();
-                totalMessagesSeen=messageList.length;
-                
-                // SAFE: Fires silently in the background AFTER content prints out
-                fetch(API_URL,{
-                    method:'PATCH',
-                    headers:{'Content-Type':'application/json'},
-                    body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})
-                }).catch(()=>{});
+                win.scrollTop=win.scrollHeight;if(wasFocused&&inputField)inputField.focus();totalMessagesSeen=messageList.length;
+                fetch(API_URL,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})}).catch(()=>{});
             }
         }catch(e){}
     }
-
     async function sendReply(){
         const txt=inputField.value.trim();if(!txt||!selectedRoomId)return;inputField.value='';
-        try {
+        try{
             await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'admin',text:txt,roomId:selectedRoomId})});
-            await getMessages();
-            setTimeout(()=>{if(inputField)inputField.focus();},50);
+            await getMessages();setTimeout(()=>{if(inputField)inputField.focus();},30);
         }catch(e){}
     }
-
-    sendButton.onclick=sendReply;
-    setInterval(loadRooms,4000);
-    setInterval(getMessages,3000);
-    loadRooms();
+    sendButton.onclick=sendReply;setInterval(loadRooms,4000);setInterval(getMessages,3000);loadRooms();
 </script>
 </body>
 </html>

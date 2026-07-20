@@ -300,12 +300,7 @@ function t(i){
 // Chat widget - Connected to API + Admin
 const API_URL = "/api/chat"; 
 
-// Generate or retrieve a permanent unique Room ID for this specific user session
 let myRoomId = localStorage.getItem('chat_room_id');
-if (!myRoomId) {
-    myRoomId = 'User_' + Math.random().toString(36).substring(2, 9).toUpperCase();
-    localStorage.setItem('chat_room_id', myRoomId);
-}
 
 const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;
 
@@ -324,8 +319,27 @@ if(i){
 }
 if(j){j.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);}
 
+// FIXED: Claims a permanent incremental numeric user ID sequentially from your api/chat.js backend
+async function initializeUserIdentity() {
+    if (!myRoomId) {
+        try {
+            const res = await fetch(`${API_URL}?action=get_id`);
+            if (res.ok) {
+                const data = await res.json();
+                myRoomId = data.roomId;
+                localStorage.setItem('chat_room_id', myRoomId);
+            }
+        } catch (err) {
+            console.error("Identity retrieval failure fallback:", err);
+        }
+    }
+}
+
 // Sends current Room ID to database session route
 async function send(t){
+  if (!myRoomId) await initializeUserIdentity();
+  if (!myRoomId) return;
+
   await fetch(API_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -335,6 +349,7 @@ async function send(t){
 
 // Polls server channel history using Room ID parameters
 async function check(){
+  if (!myRoomId) return;
   try{
     const r=await fetch(`${API_URL}?roomId=${myRoomId}`);
     if(!r.ok)return;
@@ -382,11 +397,15 @@ b.onclick=async()=>{
   if(o){
     G();c.style.display='flex';c.onclick = (ev) => ev.stopPropagation(); u=0;B();
     
-    await fetch(API_URL, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })
-    }).catch(()=>{});
+    if (!myRoomId) await initializeUserIdentity();
+
+    if(myRoomId) {
+        await fetch(API_URL, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })
+        }).catch(()=>{});
+    }
 
     if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f');
     check();if(!poll)poll=setInterval(check,3000)
@@ -446,8 +465,11 @@ const observer = new IntersectionObserver(entries=>{
 },{threshold:0.5});
 sections.forEach(s=>observer.observe(s));
 
-setInterval(check, 4000);
-check();
+// FIXED INIT SEQUENCE: Resolves user identity before triggering continuous message checks
+initializeUserIdentity().then(() => {
+    setInterval(check, 4000);
+    check();
+});
 </script>
 </body>
 </html>

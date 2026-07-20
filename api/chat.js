@@ -13,37 +13,43 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // 1. SEND A MESSAGE
+    // NEW ROUTE: GENERATE PERMANENT INCREMENTAL USER ID FOR NEW VISITORS
+    if (req.method === 'GET' && req.query.action === 'get_id') {
+      // Increments chat:user_counter automatically (starts at 1 up to 10000+)
+      const nextIdNumber = await redis.incr('chat:user_counter');
+      const assignedId = `User_${nextIdNumber}`;
+      return res.status(200).json({ roomId: assignedId });
+    }
+
+    // 1. SAVE INCOMING MESSAGES
     if (req.method === 'POST') {
       const { sender, text, roomId } = req.body;
       if (!sender || !text || !roomId) return res.status(400).json({ error: 'Missing fields' });
       
       const newMessage = { sender, text, timestamp: Date.now() };
+      const targetRoom = `chat:room:${roomId}`;
       
-      // Save message to this specific room's history
-      await redis.rpush(`chat:room:${roomId}`, JSON.stringify(newMessage));
-      await redis.ltrim(`chat:room:${roomId}`, -200, -1);
+      // Save message securely to Redis
+      await redis.rpush(targetRoom, JSON.stringify(newMessage));
+      
+      // Increased from 200 to 1000 messages to prevent automatic deletion history cuts!
+      await redis.ltrim(targetRoom, -1000, -1); 
 
-      // Track this room in the global active rooms list for the admin
+      // Track active channels list for admin dashboard sidebar
       await redis.hset('chat:active_rooms', { [roomId]: Date.now() });
 
-      // Update Unread Counters
       if (sender === 'user') {
-        // Increment unread count for admin to see
         await redis.hincrby(`chat:unread:${roomId}`, 'admin', 1);
       } else if (sender === 'admin') {
-        // Increment unread count for user to see
         await redis.hincrby(`chat:unread:${roomId}`, 'user', 1);
       }
-
       return res.status(200).json({ success: true });
     }
 
-    // 2. GET MESSAGES OR ACTIVE ROOMS LIST
+    // 2. GET CONVERSATION HISTORY OR SIDEBAR CHANNELS
     if (req.method === 'GET') {
       const { roomId, type } = req.query;
 
-      // Admin requesting the list of all active chat rooms + unread counts
       if (type === 'list') {
         const rooms = await redis.hgetall('chat:active_rooms') || {};
         const list = [];
@@ -54,23 +60,22 @@ export default async function handler(req, res) {
         return res.status(200).json(list);
       }
 
-      // Fetching message history for a specific room
       if (!roomId) return res.status(400).json({ error: 'Missing roomId' });
       const messages = await redis.lrange(`chat:room:${roomId}`, 0, -1);
-      
-      // Fetch user unread count for the widget button badge
       const unread = await redis.hgetall(`chat:unread:${roomId}`) || {};
 
-      return res.status(200).json({ messages, userUnread: parseInt(unread.user || 0) });
+      return res.status(200).json({ 
+        messages: messages, 
+        userUnread: parseInt(unread.user || 0) 
+      });
     }
 
-    // 3. CLEAR UNREAD BADGES WHEN OPENED
+    // 3. RESET UNREAD BADGES
     if (req.method === 'PATCH') {
       const { roomId, clearFor } = req.body;
-      if (!roomId || !clearFor) return res.status(400).json({ error: 'Missing parameters' });
-
-      // Clear the specific badge count to 0
-      await redis.hset(`chat:unread:${roomId}`, { [clearFor]: 0 });
+      if (roomId && clearFor) {
+        await redis.hset(`chat:unread:${roomId}`, { [clearFor]: 0 });
+      }
       return res.status(200).json({ success: true });
     }
     
