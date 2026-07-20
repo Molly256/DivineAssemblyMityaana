@@ -3,31 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Chat Admin</title>
     <style>
         *{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:Arial,sans-serif;background:#f4f7f6;display:flex;height:100vh;overflow:hidden;}
-        #sidebar{width:280px;min-width:240px;background:#2c3e50;color:#fff;display:flex;flex-direction:column;border-right:1px solid #1a252f;z-index:10;transition:transform .25s ease;}
-        .sb-hd{padding:15px 12px;background:#1a252f;text-align:center;font-weight:bold;font-size:1rem;}
+        body{font-family:Arial,sans-serif;background:#111b21;display:flex;height:100vh;overflow:hidden;}
+        #sidebar{width:100%;background:#111b21;color:#e9edef;display:flex;flex-direction:column;border-right:1px solid #222e35;z-index:10;transition:transform .2s ease;}
+        .shd{padding:14px;background:#202c33;font-weight:bold;font-size:1.1rem;box-shadow:0 1px 2px rgba(0,0,0,0.3);}
         #room-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
-        .room-item{padding:14px 12px;border-bottom:1px solid #34495e;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;word-break:break-all;}
-        .room-item:hover{background:#34495e;}.room-item.active{background:#007bff;}
-        .badge{background:#dc3545;color:#fff;border-radius:10px;padding:2px 7px;font-size:.75rem;font-weight:bold;margin-left:5px;}
-        #main-chat{flex:1;display:flex;flex-direction:column;background:#efeae2;min-width:0;position:relative;z-index:5;}
-        header{background:#007bff;color:#fff;padding:12px;text-align:center;font-size:1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:10px;}
-        #back-btn{display:none;background:none;border:none;color:#fff;font-size:1.3rem;font-weight:bold;cursor:pointer;padding:0 5px;margin-right:auto;}
-        #chat-window{flex:1;padding:15px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
-        .msg-row{display:flex;gap:8px;align-items:flex-end;width:100%;}
+        .rm-it{padding:14px;border-bottom:1px solid #222e35;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;word-break:break-all;}
+        .rm-it:hover{background:#202c33;}.rm-it.active{background:#2a3942;}
+        .badge{background:#00a884;color:#111b21;border-radius:10px;padding:2px 6px;font-size:.7rem;font-weight:bold;margin-left:4px;}
+        #main-chat{flex:1;display:flex;flex-direction:column;background:#0b141a;min-width:0;position:relative;z-index:5;transition:transform .2s ease;}
+        header{background:#202c33;color:#e9edef;padding:12px;text-align:center;font-size:1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:10px;}
+        #back-btn{display:none;background:none;border:none;color:#00a884;font-size:1.4rem;font-weight:bold;cursor:pointer;padding:0 5px;margin-right:auto;}
+        #chat-window{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background-image:linear-gradient(rgba(11,20,26,0.93),rgba(11,20,26,0.93)),url('https://githubusercontent.com');background-size:contain;}
+        .msg-row{display:flex;gap:6px;align-items:flex-end;width:100%;}
         .msg-row.user{justify-content:flex-start;}.msg-row.admin{justify-content:flex-end;}
-        .msg{max-width:75%;padding:9px 12px;border-radius:10px;font-size:.9rem;line-height:1.3;word-wrap:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.1);}
-        .user{background:#fff;border:1px solid #e0e0e0;color:#333;border-top-left-radius:0;}
-        .admin{background:#d9fdd3;color:#333;border-top-right-radius:0;}
-        .input-area{display:flex;padding:10px;background:#f0f2f5;border-top:1px solid #ddd;gap:8px;align-items:center;z-index:9999;position:relative;}
-        input{flex:1;padding:10px 14px;border:1px solid #fff;border-radius:20px;outline:none;font-size:.95rem;min-width:0;background:#fff;box-shadow:0 1px 1px rgba(0,0,0,0.05);position:relative;z-index:10000;-webkit-user-select:text;user-select:text;}
-        input:focus{border-color:#007bff;}
-        button{background:#007bff;color:#fff;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:.95rem;white-space:nowrap;position:relative;z-index:10000;}
-        button:hover{background:#0056b3;}
-        .no-room-selected{display:flex;flex:1;align-items:center;justify-content:center;color:#7f8c8d;font-size:.95rem;text-align:center;padding:15px;background:#f8f9fa;}
+        .msg{max-width:78%;padding:8px 12px;border-radius:10px;font-size:.9rem;line-height:1.3;word-wrap:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.15);}
+        .user{background:#202c33;color:#e9edef;border-top-left-radius:0;}
+        .admin{background:#005c4b;color:#e9edef;border-top-right-radius:0;}
+        .input-area{display:flex;padding:10px;background:#202c33;border-top:1px solid #222e35;gap:8px;align-items:center;z-index:9999;position:relative;}
+        input{flex:1;padding:10px 14px;border:none;border-radius:20px;outline:none;font-size:.95rem;min-width:0;background:#2a3942;color:#fff;position:relative;z-index:10000;-webkit-user-select:text;user-select:text;}
+        input::placeholder{color:#8696a0;}
+        button#send-btn{background:#00a884;color:#111b21;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:.95rem;position:relative;z-index:10000;}
+        .no-room-selected{display:flex;flex:1;align-items:center;justify-content:center;color:#8696a0;font-size:.9rem;text-align:center;padding:15px;background:#111b21;}
         @media (max-width:768px){
             body{position:relative;}
             #sidebar{width:100%;max-width:100%;position:absolute;left:0;top:0;height:100%;transform:translateX(0);}
@@ -36,6 +35,7 @@
             body.viewing-chat #main-chat{transform:translateX(0);}
             body.viewing-chat #back-btn{display:block;}
         }
+        @media (min-width:769px){#sidebar{width:300px;}#back-btn{display:none!important;}}
     </style>
 </head>
 <body>
@@ -47,10 +47,7 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
   else{sessionStorage.setItem('adminAuth','true');}
 }
 </script>
-<div id="sidebar">
-    <div class="sb-hd">Active Channels</div>
-    <div id="room-list"></div>
-</div>
+<div id="sidebar"><div class="shd">Active Channels</div><div id="room-list"></div></div>
 <div id="main-chat">
     <header><button id="back-btn" onclick="closeChat()">←</button><span id="chat-header">Select a chat room</span></header>
     <div id="chat-window" class="no-room-selected">No Chat Mounted</div>
@@ -63,7 +60,9 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
     const API_URL="/api/chat";let selectedRoomId=null,totalMessagesSeen=0;
     const inputField=document.getElementById('admin-message'),sendButton=document.getElementById('send-btn');
     if(inputField){
+      inputField.style.pointerEvents="auto";
       inputField.addEventListener('mousedown',e=>e.stopPropagation(),{capture:true});
+      inputField.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
       inputField.addEventListener('click',e=>{e.stopPropagation();inputField.focus();},{capture:true});
       inputField.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();sendReply();}},{capture:true});
     }
@@ -73,7 +72,7 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
             const box=document.getElementById('room-list');box.innerHTML='';
             rms.sort((a,b)=>b.lastActive-a.lastActive);
             rms.forEach(rm=>{
-                const el=document.createElement('div');el.className=`room-item ${selectedRoomId===rm.id?'active':''}`;
+                const el=document.createElement('div');el.className=`room-item rm-it ${selectedRoomId===rm.id?'active':''}`;
                 el.innerHTML=`<span>💬 ${rm.id}</span>`;
                 if(rm.adminUnread>0&&selectedRoomId!==rm.id){
                     const bd=document.createElement('span');bd.className='badge';bd.textContent=rm.adminUnread;el.appendChild(bd);
@@ -86,8 +85,8 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
         selectedRoomId=id;totalMessagesSeen=0;document.getElementById('chat-header').textContent=id;
         const win=document.getElementById('chat-window');win.className='';win.innerHTML='';
         document.getElementById('input-container').style.display='flex';document.body.classList.add('viewing-chat');
-        await fetch(API_URL,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})});
-        getMessages();
+        await getMessages();
+        setTimeout(()=>{if(inputField)inputField.focus();},100);
     }
     function closeChat(){
         document.body.classList.remove('viewing-chat');selectedRoomId=null;totalMessagesSeen=0;
@@ -99,15 +98,16 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
         if(!selectedRoomId)return;
         try{
             const r=await fetch(`${API_URL}?roomId=${selectedRoomId}`);if(!r.ok)return;const d=await r.json();
-            if(d.messages.length!==totalMessagesSeen){
-                const win=document.getElementById('chat-window');const fsc=(document.activeElement===inputField);win.innerHTML='';
-                d.messages.forEach(mStr=>{
+            const messageList = d.messages || [];
+            if(messageList.length!==totalMessagesSeen){
+                const win=document.getElementById('chat-window');const wasFocused=(document.activeElement===inputField);win.innerHTML='';
+                messageList.forEach(mStr=>{
                     try{
                         const m=JSON.parse(mStr);const row=document.createElement('div');row.className=`msg-row ${m.sender}`;
                         row.innerHTML=`<div class="msg ${m.sender}">${m.text}</div>`;win.appendChild(row);
                     }catch(e){}
                 });
-                win.scrollTop=win.scrollHeight;if(fsc)inputField.focus();totalMessagesSeen=d.messages.length;
+                win.scrollTop=win.scrollHeight;if(wasFocused&&inputField)inputField.focus();totalMessagesSeen=messageList.length;
                 await fetch(API_URL,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:selectedRoomId,clearFor:'admin'})});
             }
         }catch(e){}
@@ -116,10 +116,10 @@ if(sessionStorage.getItem('adminAuth')!=='true'){
         const txt=inputField.value.trim();if(!txt||!selectedRoomId)return;inputField.value='';
         try{
             await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'admin',text:txt,roomId:selectedRoomId})});
-            getMessages();
+            await getMessages();setTimeout(()=>{if(inputField)inputField.focus();},30);
         }catch(e){}
     }
-    sendButton.onclick=sendReply;setInterval(loadRooms,3000);setInterval(getMessages,3000);loadRooms();
+    sendButton.onclick=sendReply;setInterval(loadRooms,4000);setInterval(getMessages,3000);loadRooms();
 </script>
 </body>
 </html>
