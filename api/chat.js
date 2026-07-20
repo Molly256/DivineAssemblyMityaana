@@ -1,65 +1,76 @@
 import { Redis } from '@upstash/redis';
 
-export const config = {
-  api: {
-    bodyParser: true,
-  },
-}
-
+export const config = { api: { bodyParser: true } };
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
   token: process.env.KV_REST_API_TOKEN,
 });
 
 export default async function handler(req, res) {
-  // CORS Configuration Allowances
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Auth'); // Added custom header validation
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Auth');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // 1. CHAT MESSAGE DISPATCH ROUTE
+    // 1. SEND A MESSAGE
     if (req.method === 'POST') {
       const { sender, text, roomId } = req.body;
-      if (!sender || !text) return res.status(400).json({ error: 'Missing fields' });
+      if (!sender || !text || !roomId) return res.status(400).json({ error: 'Missing fields' });
       
-      const targetRoom = roomId ? `chat:messages:${roomId}` : 'chat:messages';
       const newMessage = { sender, text, timestamp: Date.now() };
       
-      await redis.rpush(targetRoom, JSON.stringify(newMessage));
-      await redis.ltrim(targetRoom, -200, -1); 
+      // Save message to this specific room's history
+      await redis.rpush(`chat:room:${roomId}`, JSON.stringify(newMessage));
+      await redis.ltrim(`chat:room:${roomId}`, -200, -1);
+
+      // Track this room in the global active rooms list for the admin
+      await redis.hset('chat:active_rooms', { [roomId]: Date.now() });
+
+      // Update Unread Counters
+      if (sender === 'user') {
+        // Increment unread count for admin to see
+        await redis.hincrby(`chat:unread:${roomId}`, 'admin', 1);
+      } else if (sender === 'admin') {
+        // Increment unread count for user to see
+        await redis.hincrby(`chat:unread:${roomId}`, 'user', 1);
+      }
+
       return res.status(200).json({ success: true });
     }
 
-    // 2. CHAT DATA RETRIEVAL ROUTE
+    // 2. GET MESSAGES OR ACTIVE ROOMS LIST
     if (req.method === 'GET') {
-      const { roomId } = req.query;
-      const targetRoom = roomId ? `chat:messages:${roomId}` : 'chat:messages';
-      
-      const messages = await redis.lrange(targetRoom, 0, -1);
-      return res.status(200).json(messages); 
-    }
+      const { roomId, type } = req.query;
 
-    // 3. ENFORCED ADMIN-ONLY DELETION ROUTE
-    if (req.method === 'PATCH') {
-      // SECURITY CHECK: Verify secret header before letting the database touch deletion actions
-      const adminAuthHeader = req.headers['x-admin-auth'];
-      if (adminAuthHeader !== 'Mityana9') {
-        return res.status(403).json({ error: 'Unauthorized: Deletion restricted to Admin Panel only.' });
+      // Admin requesting the list of all active chat rooms + unread counts
+      if (type === 'list') {
+        const rooms = await redis.hgetall('chat:active_rooms') || {};
+        const list = [];
+        for (const id of Object.keys(rooms)) {
+          const unread = await redis.hgetall(`chat:unread:${id}`) || {};
+          list.push({ id, lastActive: rooms[id], adminUnread: parseInt(unread.admin || 0) });
+        }
+        return res.status(200).json(list);
       }
 
-      const { index, roomId } = req.body;
-      if (index === undefined) return res.status(400).json({ error: 'Missing index' });
-
-      const targetRoom = roomId ? `chat:messages:${roomId}` : 'chat:messages';
-      const messages = await redis.lrange(targetRoom, 0, -1);
-      if (index < 0 || index >= messages.length) return res.status(400).json({ error: 'Invalid index' });
-
-      const targetMessageString = messages[index];
+      // Fetching message history for a specific room
+      if (!roomId) return res.status(400).json({ error: 'Missing roomId' });
+      const messages = await redis.lrange(`chat:room:${roomId}`, 0, -1);
       
-      // Safe list item match deletion 
-      await redis.lrem(targetRoom, 1, targetMessageString);
+      // Fetch user unread count for the widget button badge
+      const unread = await redis.hgetall(`chat:unread:${roomId}`) || {};
+
+      return res.status(200).json({ messages, userUnread: parseInt(unread.user || 0) });
+    }
+
+    // 3. CLEAR UNREAD BADGES WHEN OPENED
+    if (req.method === 'PATCH') {
+      const { roomId, clearFor } = req.body;
+      if (!roomId || !clearFor) return res.status(400).json({ error: 'Missing parameters' });
+
+      // Clear the specific badge count to 0
+      await redis.hset(`chat:unread:${roomId}`, { [clearFor]: 0 });
       return res.status(200).json({ success: true });
     }
     

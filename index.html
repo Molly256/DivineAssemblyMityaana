@@ -298,9 +298,21 @@ function t(i){
 }
 
 // Chat widget - Connected to API + Admin
-const API_URL = "https://divinedistrictassembly-mityana.org"; // <-- CHANGE THIS
+const API_URL = "https://divinedistrictassembly-mityana.org"; 
 
-const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};const G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'};
+// 1. Generate or retrieve a permanent unique Room ID for this specific user session
+let myRoomId = localStorage.getItem('chat_room_id');
+if (!myRoomId) {
+    myRoomId = 'User_' + Math.random().toString(36).substring(2, 9).toUpperCase();
+    localStorage.setItem('chat_room_id', myRoomId);
+}
+
+const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;
+
+// Updates the red badge notification count bubble
+const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};
+
+const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};const G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'};
 
 // Force-enable desktop inputs and layer the chat window on top of layout elements
 if(c){c.style.zIndex="999999";c.style.pointerEvents="auto";}
@@ -312,27 +324,47 @@ if(i){
 }
 if(j){j.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);}
 
+// FIXED: Sends current Room ID to database session route
 async function send(t){
   await fetch(API_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({sender:'user',text:t,timestamp:Date.now()})
+    body:JSON.stringify({sender:'user',text:t,roomId:myRoomId})
   }).catch(()=>A('⚠️ Failed to send message','f'))
 }
 
+// FIXED: Polls server channel history using Room ID parameters and logs unread metrics
 async function check(){
   try{
-    const r=await fetch(API_URL);
+    const r=await fetch(`${API_URL}?roomId=${myRoomId}`);
     if(!r.ok)return;
-    const msgs=await r.json();
-    if(msgs.length>last){
-      msgs.slice(last).forEach(m=>{
+    const data = await r.json();
+    
+    // Clear notifications continuously if the panel is wide open
+    if (o) {
+      if(data.userUnread > 0) {
+        await fetch(API_URL, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })
+        });
+      }
+      u = 0;
+      B();
+    } else {
+      // Sync local badge counter with database values if panel is closed
+      u = data.userUnread;
+      B();
+    }
+
+    if(data.messages.length>last){
+      data.messages.slice(last).forEach(m=>{
         const msg=JSON.parse(m);
         if(msg.sender==='admin'){
-          A(msg.text,'f');u++;B()
+          A(msg.text,'f');
         }
       });
-      last=msgs.length
+      last=data.messages.length
     }
   }catch(e){}
 }
@@ -345,19 +377,27 @@ const S=async()=>{
   await send(v)
 };
 
-b.onclick=()=>{
+b.onclick=async()=>{
   if(drag)return;
   o=!o;
   if(o){
     G();c.style.display='flex';c.onclick = (ev) => ev.stopPropagation(); u=0;B();
+    
+    // Tell the database to reset unread counters immediately upon opening chat panel
+    await fetch(API_URL, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })
+    }).catch(()=>{});
+
     if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f');
-    check();poll=setInterval(check,3000)
+    check();if(!poll)poll=setInterval(check,3000)
   }else{
-    c.style.display='none';c.onclick = null; clearInterval(poll)
+    c.style.display='none';c.onclick = null;
   }
 };
 
-l.onclick=()=>{c.style.display='none';o=0;c.onclick = null; clearInterval(poll)};
+l.onclick=()=>{c.style.display='none';o=0;};
 j.onclick=S;
 i.onkeydown=x=>x.key=='Enter'&&S();
 k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
@@ -409,6 +449,10 @@ const observer = new IntersectionObserver(entries=>{
   })
 },{threshold:0.5});
 sections.forEach(s=>observer.observe(s));
+
+// Silent background synchronization loop to update badges even when minimized
+setInterval(check, 4000);
+check();
 </script>
 </body>
 </html>
