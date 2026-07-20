@@ -12,40 +12,54 @@ const redis = new Redis({
 });
 
 export default async function handler(req, res) {
-  // ADD THIS: Allow your website to call this API
+  // CORS Configuration Allowances
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Auth'); // Added custom header validation
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
+    // 1. CHAT MESSAGE DISPATCH ROUTE
     if (req.method === 'POST') {
-      const { sender, text } = req.body;
+      const { sender, text, roomId } = req.body;
       if (!sender || !text) return res.status(400).json({ error: 'Missing fields' });
       
+      const targetRoom = roomId ? `chat:messages:${roomId}` : 'chat:messages';
       const newMessage = { sender, text, timestamp: Date.now() };
-      await redis.rpush('chat:messages', JSON.stringify(newMessage));
-      await redis.ltrim('chat:messages', -200, -1); // keep only last 200 messages
+      
+      await redis.rpush(targetRoom, JSON.stringify(newMessage));
+      await redis.ltrim(targetRoom, -200, -1); 
       return res.status(200).json({ success: true });
     }
 
+    // 2. CHAT DATA RETRIEVAL ROUTE
     if (req.method === 'GET') {
-      const messages = await redis.lrange('chat:messages', 0, -1);
-      return res.status(200).json(messages); // array of JSON strings
+      const { roomId } = req.query;
+      const targetRoom = roomId ? `chat:messages:${roomId}` : 'chat:messages';
+      
+      const messages = await redis.lrange(targetRoom, 0, -1);
+      return res.status(200).json(messages); 
     }
 
+    // 3. ENFORCED ADMIN-ONLY DELETION ROUTE
     if (req.method === 'PATCH') {
-      const { index } = req.body;
+      // SECURITY CHECK: Verify secret header before letting the database touch deletion actions
+      const adminAuthHeader = req.headers['x-admin-auth'];
+      if (adminAuthHeader !== 'Mityana9') {
+        return res.status(403).json({ error: 'Unauthorized: Deletion restricted to Admin Panel only.' });
+      }
+
+      const { index, roomId } = req.body;
       if (index === undefined) return res.status(400).json({ error: 'Missing index' });
 
-      const messages = await redis.lrange('chat:messages', 0, -1);
+      const targetRoom = roomId ? `chat:messages:${roomId}` : 'chat:messages';
+      const messages = await redis.lrange(targetRoom, 0, -1);
       if (index < 0 || index >= messages.length) return res.status(400).json({ error: 'Invalid index' });
 
-      messages.splice(index, 1); // remove 1 message
-      await redis.del('chat:messages');
-      if (messages.length > 0) {
-        await redis.rpush('chat:messages', ...messages);
-      }
+      const targetMessageString = messages[index];
+      
+      // Safe list item match deletion 
+      await redis.lrem(targetRoom, 1, targetMessageString);
       return res.status(200).json({ success: true });
     }
     
