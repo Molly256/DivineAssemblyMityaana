@@ -8,31 +8,31 @@
         body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; display: flex; height: 100vh; overflow: hidden; }
         
         /* Sidebar Navigation Column */
-        #sidebar { width: 260px; background: #2c3e50; color: white; display: flex; flex-direction: column; border-right: 1px solid #1a252f; }
-        .sidebar-header { padding: 15px; background: #1a252f; text-align: center; font-weight: bold; font-size: 1.1rem; }
+        #sidebar { width: 220px; min-width: 170px; background: #2c3e50; color: white; display: flex; flex-direction: column; border-right: 1px solid #1a252f; }
+        .sidebar-header { padding: 15px 10px; background: #1a252f; text-align: center; font-weight: bold; font-size: 1rem; }
         #room-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-        .room-item { padding: 12px 15px; border-bottom: 1px solid #34495e; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; transition: background 0.2s; }
+        .room-item { padding: 12px 12px; border-bottom: 1px solid #34495e; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; transition: background 0.2s; word-break: break-all; }
         .room-item:hover { background: #34495e; }
         .room-item.active { background: #007bff; }
-        .badge { background: #dc3545; color: white; border-radius: 10px; padding: 2px 8px; font-size: 0.75rem; font-weight: bold; }
+        .badge { background: #dc3545; color: white; border-radius: 10px; padding: 2px 8px; font-size: 0.75rem; font-weight: bold; margin-left: 4px; }
 
         /* Main Dialogue Field Layout */
-        #main-chat { flex: 1; display: flex; flex-direction: column; background: #fff; }
-        header { background: #007bff; color: white; padding: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+        #main-chat { flex: 1; display: flex; flex-direction: column; background: #fff; min-width: 0; }
+        header { background: #007bff; color: white; padding: 15px; text-align: center; font-size: 1.1rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; }
         
         .msg-row { display: flex; gap: 8px; align-items: flex-end; }
         .msg-row.user { justify-content: flex-start; }
         .msg-row.admin { justify-content: flex-end; }
-        .msg { max-width: 70%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; }
+        .msg { max-width: 75%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; }
         .user { background: #ffffff; border: 1px solid #e0e0e0; color: #333; }
         .admin { background: #007bff; color: white; }
         
         .input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #ddd; gap: 8px; }
-        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 1rem; }
-        button { background: #007bff; color: white; border: none; padding: 0 25px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 1rem; min-width: 0; }
+        button { background: #007bff; color: white; border: none; padding: 0 20px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 1rem; white-space: nowrap; }
         button:hover { background: #0056b3; }
-        .no-room-selected { display: flex; flex: 1; align-items: center; justify-content: center; color: #7f8c8d; font-size: 1.2rem; }
+        .no-room-selected { display: flex; flex: 1; align-items: center; justify-content: center; color: #7f8c8d; font-size: 1rem; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
@@ -63,6 +63,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
 </div>
 
 <script>
+    // FIXED: Mapped precisely to your explicit Vercel KV routing path endpoint
     const API_URL = "https://divinedistrictassembly-mityana.org";
     let selectedRoomId = null;
     let totalMessagesSeen = 0;
@@ -81,7 +82,6 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
 
     async function loadDashboardChannels() {
         try {
-            // Fetch list of active chat rooms
             const r = await fetch(`${API_URL}?type=list`);
             if (!r.ok) return;
             const rooms = await r.json();
@@ -95,7 +95,10 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
             rooms.forEach(room => {
                 const item = document.createElement('div');
                 item.className = `room-item ${selectedRoomId === room.id ? 'active' : ''}`;
-                item.innerHTML = `<span>💬 ${room.id}</span>`;
+                
+                const label = document.createElement('span');
+                label.textContent = `💬 ${room.id}`;
+                item.appendChild(label);
                 
                 // Append unread red count bubble if active
                 if (room.adminUnread > 0 && selectedRoomId !== room.id) {
@@ -106,7 +109,7 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
                 }
 
                 item.onclick = () => switchChatRoom(room.id);
-                listContainer.appendChild(room.item || item);
+                listContainer.appendChild(item); // FIXED: Correct structural reference assignment
             });
         } catch(e) {}
     }
@@ -138,18 +141,16 @@ if(sessionStorage.getItem('adminAuth') !== 'true'){
             if (!r.ok) return;
             const data = await r.json();
 
-            // Clear unread counts continuously while the conversation is active
-            if (data.adminUnread > 0 || allMessages.length !== data.messages.length) {
+            if (data.messages.length !== totalMessagesSeen) {
+                renderMessages(data.messages);
+                totalMessagesSeen = data.messages.length;
+                
+                // FIXED: Safe dynamic unread count reset check execution logic loops
                 await fetch(API_URL, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ roomId: selectedRoomId, clearFor: 'admin' })
                 });
-            }
-
-            if (data.messages.length !== totalMessagesSeen) {
-                renderMessages(data.messages);
-                totalMessagesSeen = data.messages.length;
             }
         } catch(e) {}
     }
