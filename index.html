@@ -25,12 +25,12 @@ header{position:sticky;top:0;width:100%;background:#fff;color:#000;display:flex;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:3px;text-decoration:none;color:#000;font-size:.6rem;font-weight:600;
   background:none;border:0;cursor:pointer;padding:4px 2px;min-width:0;
-  text-align:center;white-space:nowrap;flex:1 /* this makes 5 buttons fit perfectly */
+  text-align:center;white-space:nowrap;flex:1
 }
 .t span.e,.h span.e{font-size:1.6rem;line-height:1;background:transparent!important;pointer-events:none}
 .h.active span.e{transform:rotate(90deg)}
 .t:active,.h:active{background:transparent!important}
-.t.active { color: #16a34a; } /* ADDED: active nav highlight */
+.t.active { color: #16a34a; }
 .t.active span.e { transform: scale(1.2); }
 
 .n{list-style:none;display:none;position:fixed;bottom:80px;right:10px;background:#fff;flex-direction:column;width:240px;padding:6px 0;border:1px solid #e5e5e5;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);z-index:1001}
@@ -41,7 +41,6 @@ header{position:sticky;top:0;width:100%;background:#fff;color:#000;display:flex;
 .n a::before{content:attr(data-emoji);font-size:1.1rem;line-height:1;flex-shrink:0}
 .n a:hover{background:#f5f5f5}
 
-/* CHANGED: All sections now show and stack */
 section{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start;padding:80px 20px 80px;scroll-margin-top:70px;background:#fff;color:#333}
 
 h1,h2{color:#000;font-weight:700}
@@ -53,7 +52,7 @@ p,li,span,div{font-weight:400;color:#333;font-size:1rem}
 .c{width:100%;max-width:800px;margin:0 auto}
 .x{display:inline-block;background:#000;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600;cursor:pointer;border:0}
 .x:hover{background:#333}
-footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:80px;display:block} /* FIXED: was <f> */
+footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bottom:80px;display:block}
 .e{background:#f1f5f9;padding:20px;border-radius:12px;font-size:1.1rem;font-weight:500;margin-top:20px;color:#333;word-break:break-all}
 .z{font-weight:700;color:#000}
 .y{display:inline-block;background:#000;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:15px;font-weight:600}
@@ -102,7 +101,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 .b{padding:12px 20px 14px}
 }
 
-/* DESKTOP - FULL WIDTH + BIGGER CONTENT */
+/* DESKTOP */
 @media(min-width: 1024px){
 .p{max-width:1400px;margin:0 auto}
 .c{max-width:1000px}
@@ -120,7 +119,6 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 
 <div class="p"><header><div class="l">DIVINE DISTRICT ASSEMBLY</div></header>
 
-<!-- BOTTOM NAV -->
 <div class="b">
   <a href="#about" class="t"><span class="e">📖</span><span>About us</span></a>
   <a href="#assemblies" class="t"><span class="e">👨‍👩‍👧‍👦</span><span>Assemblies</span></a>
@@ -129,7 +127,6 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
   <button class="h" id="m"><span class="e">☰</span><span>More</span></button>
 </div>
 
-<!-- MORE MENU -->
 <ul class="n" id="n">
   <li><a href="#community-projects" data-emoji="📋">Community projects & programs</a></li>
   <li><a href="#shoe-donate" data-emoji="👟">Donate Shoes</a></li>
@@ -196,7 +193,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 <h2>Join the Movement</h2>
 <p>We invite all residents of Mityana District to join our Community assemblies and be part of the movement towards self governance. Your participation is crucial for the success of our restoration plans.</p>
 <div class="e">divinedistrictassemblymityana@gmail.com</div>
-<a href="mailto:divinedistrictassemblymityana@gmail.com" class="x" style="margin-top:25px">divinedistrictassemblymityana@gmail.com</a> <!-- FIXED: email match -->
+<a href="mailto:divinedistrictassemblymityana@gmail.com" class="x" style="margin-top:25px">divinedistrictassemblymityana@gmail.com</a>
 </div>
 </section>
 <section class="s" id="shoe-donate">
@@ -257,11 +254,11 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </div>
 </div>
 </section>
-<footer>© 2026 Divine District Assembly - Mityana District. Restoring Communities Through Natural Raw.</footer> <!-- FIXED: was <f> -->
+<footer>© 2026 Divine District Assembly - Mityana District. Restoring Communities Through Natural Raw.</footer>
 </div>
 <div id="cb">🎧<span id="b">1</span></div>
 <div id="c">
-<div id="d"><span><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l">×</button></div> <!-- FIXED: viewBox -->
+<div id="d"><span><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l">×</button></div>
 <div id="e"></div>
 <button id="k">Talk to Admin 👤</button>
 <div id="h"><input id="i" placeholder="Type a message..."><button id="j">Send</button></div>
@@ -310,7 +307,7 @@ async function send(t){
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({sender:'user',text:t,timestamp:Date.now()})
-  })
+  }).catch(()=>A('⚠️ Failed to send message','f'))
 }
 
 async function check(){
@@ -342,23 +339,41 @@ b.onclick=()=>{
   if(drag)return;
   o=!o;
   if(o){
-    G();c.style.display='flex';u=0;B();
+    G();c.style.display='flex';c.onclick = (ev) => ev.stopPropagation(); u=0;B();
     if(!e.children.length)A('Hi 👋 I’m Chat. How can I help?','f');
     check();poll=setInterval(check,3000)
   }else{
-    c.style.display='none';clearInterval(poll)
+    c.style.display='none';c.onclick = null; clearInterval(poll)
   }
 };
 
-l.onclick=()=>{c.style.display='none';o=0;clearInterval(poll)};
+l.onclick=()=>{c.style.display='none';o=0;c.onclick = null; clearInterval(poll)};
 j.onclick=S;
 i.onkeydown=x=>x.key=='Enter'&&S();
 k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
 
-const move=ev=>{drag=1;const t=ev.touches?ev.touches[0]:ev;b.style.bottom=b.style.right="auto";b.style.left=(lx+t.clientX-x)+"px";b.style.top=(ly+t.clientY-y)+"px"};
-const start=ev=>{drag=0;const t=ev.touches?ev.touches[0]:ev;x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;document.onmousemove=document.ontouchmove=move;document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}};
+// FIXED: Only allow drag when chat is CLOSED
+const move=ev=>{
+  if(!o){
+    drag=1;
+    const t=ev.touches?ev.touches[0]:ev;
+    b.style.bottom=b.style.right="auto";
+    b.style.left=(lx+t.clientX-x)+"px";
+    b.style.top=(ly+t.clientY-y)+"px";
+  }
+};
+const start=ev=>{
+  if(!o){
+    drag=0;
+    const t=ev.touches?ev.touches[0]:ev;
+    x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;
+    document.onmousemove=document.ontouchmove=move;
+    document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}
+  }
+};
 b.onmousedown=b.ontouchstart=start;b.ondragstart=ev=>ev.preventDefault();
 addEventListener('resize',()=>{if(o)G()});
+
 // PDF button - open chat and auto-send message
 document.getElementById('pdf-btn').onclick=function(){
   if(!o){b.click()}
