@@ -141,9 +141,6 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
     We serve as the restoration arm of mityana district. As a non-profit body, our focus is to represent the people of mityana and promote development and empowerment at the grassroot level.<br><br>
     We stand in alignment with the C.A.R.E | Center for Armity and Restoration of The Earth.<br><br>
     We are dedicated to setting up community development assemblies across mityana district to elevate community standards and implement the restoration plan based on natural law.</p>
-
-    <h2 style="margin-top:40px;font-size:1.8rem;text-transform:uppercase;font-weight:700;letter-spacing:1px;">DOWNLOAD PDF</h2>
-    <button class="x" id="pdf-btn-about" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 DOWNLOAD PDF</button>
   </div>
 </section>
 
@@ -187,9 +184,8 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </section><section id="community-projects">
 <div class="c" style="text-align:center">
 <h2>Community Projects & Programs</h2>
-<p>Community assemblies are invited to submit proposals to:<a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:15px;display:inline-block">mityana.projects@protonmail.com</a></p>
-<h2 style="margin-top:25px;font-size:1.8rem;text-transform:uppercase;font-weight:700;letter-spacing:1px;">DOWNLOAD PDF</h2>
-<button class="x" id="pdf-btn" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 DOWNLOAD PDF</button>
+<p><em>Mityana Regional Project Proposal</em><br>Community assemblies are invited to submit proposals to:<a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:15px;display:inline-block">mityana.projects@protonmail.com</a></p>
+<button class="x" id="pdf-btn" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 Download PDF</button>
 </div>
 </section>
 <section class="p5" id="join">
@@ -302,11 +298,11 @@ function t(i){
 }
 
 // Chat widget - Connected to API + Admin
-const API_URL = "/api/chat";
+const API_URL = "/api/chat"; 
 
 // 1. Force clear numerical format parameters (User_1 to User_10000) inside device cache storage
 let myRoomId = localStorage.getItem('chat_room_id');
-if (!myRoomId ||!myRoomId.startsWith('User_') || isNaN(myRoomId.split('_')[1])) {
+if (!myRoomId || !myRoomId.startsWith('User_') || isNaN(myRoomId.split('_')[1])) {
     // Generates a strict deterministic number key space value between 1 and 10000
     const rawNumberId = Math.floor(Math.random() * 10000) + 1;
     myRoomId = `User_${rawNumberId}`;
@@ -318,7 +314,7 @@ const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document
 const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};
 const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};const G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'};
 
-if(c){c.style.zIndex="999";c.style.pointerEvents="auto";}
+if(c){c.style.zIndex="999999";c.style.pointerEvents="auto";}
 if(i){
   i.style.pointerEvents="auto";i.style.userSelect="text";i.style.webkitUserSelect="text";i.style.cursor="text";
   i.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);
@@ -353,7 +349,7 @@ async function check(){
     const r=await fetch(`${API_URL}?roomId=${myRoomId}`);
     if(!r.ok)return;
     const data = await r.json();
-
+    
     if (o) {
       if(data.userUnread > 0) {
         await fetch(API_URL, {
@@ -370,21 +366,21 @@ async function check(){
     }
 
     const messageList = data.messages || [];
-
+    
     if (e.children.length === 0 && messageList.length > 0) {
-        last = 0;
+        last = 0; 
     }
 
     if(messageList.length>last){
       messageList.slice(last).forEach(m=>{
         try {
             let txt = ""; let cls = "f";
-            if (typeof m === 'object' && m!== null) {
-                txt = m.text; cls = (m.sender === 'admin')? 'f' : 'g';
+            if (typeof m === 'object' && m !== null) {
+                txt = m.text; cls = (m.sender === 'admin') ? 'f' : 'g';
             } else if (typeof m === 'string') {
                 if (m.startsWith("{")) {
                     const parsed = JSON.parse(m);
-                    txt = parsed.text; cls = (parsed.sender === 'admin')? 'f' : 'g';
+                    txt = parsed.text; cls = (parsed.sender === 'admin') ? 'f' : 'g';
                 } else { txt = m; }
             }
             if (txt) A(txt, cls);
@@ -408,7 +404,7 @@ b.onclick=async()=>{
   o=!o;
   if(o){
     G();c.style.display='flex';c.onclick = (ev) => ev.stopPropagation(); u=0;B();
-
+    
     if(myRoomId) {
         await fetch(API_URL, {
           method: 'PATCH',
@@ -416,7 +412,7 @@ b.onclick=async()=>{
           body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })
         }).catch(()=>{});
     }
-
+    
     e.innerHTML = '';
     last = 0;
 
@@ -435,7 +431,7 @@ k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
 const move=ev=>{
   if(!o){
     drag=1;
-    const t=(ev.touches && ev.touches.length)? ev.touches[0] : ev;
+    const t=(ev.touches && ev.touches.length) ? ev.touches[0] : ev;
     b.style.bottom=b.style.right="auto";
     b.style.left=(lx+t.clientX-x)+"px";
     b.style.top=(ly+t.clientY-y)+"px";
@@ -444,11 +440,11 @@ const move=ev=>{
 const start=ev=>{
   const targetId = ev.target.id;
   if (targetId === 'i' || targetId === 'j' || ev.target.tagName === 'INPUT' || ev.target.tagName === 'BUTTON') {
-    return;
+    return; 
   }
   if(!o){
     drag=0;
-    const t=(ev.touches && ev.touches.length)? ev.touches[0] : ev;
+    const t=(ev.touches && ev.touches.length) ? ev.touches[0] : ev;
     x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;
     document.onmousemove=document.ontouchmove=move;
     document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}
@@ -465,16 +461,8 @@ document.getElementById('pdf-btn').onclick=function(){
   },300);
 };
 
-document.getElementById('pdf-btn-about').onclick=function(){
-  if(!o){b.click()}
-  setTimeout(()=>{
-    i.value='hey 👋 I want to download PDF';
-    S();
-  },300);
-};
-
 const sections = document.querySelectorAll('section');
-const activeNavTabs = document.querySelectorAll('.t');
+const activeNavTabs = document.querySelectorAll('.t'); 
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
