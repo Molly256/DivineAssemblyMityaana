@@ -41,23 +41,29 @@ export default async function handler(req, res) {
       if (!roomId) return res.status(400).json({ error: 'Missing roomId' });
 
       const cleanId = roomId.replace('chat:room:', '');
-      const alternateIdFormat = cleanId.startsWith('user_') ? cleanId.replace('user_', 'User_') : cleanId.replace('User_', 'user_');
       
-      // Permanently destroy lists, active logs tracking index maps, and metrics fields loops from Upstash
+      // WhatsApp Fix: Permanently destroy specific random ID keys directly without format manipulation mutations
       await redis.del(`chat:room:${cleanId}`);
-      await redis.del(`chat:room:${alternateIdFormat}`);
       await redis.del(`chat:unread:${cleanId}`);
-      await redis.del(`chat:unread:${alternateIdFormat}`);
       await redis.hdel('chat:active_rooms', cleanId);
-      await redis.hdel('chat:active_rooms', alternateIdFormat);
 
       return res.status(200).json({ success: true });
     }
 
-    // 1. GENERATE UNIQUE INCREMENTAL SERIAL ID
+    // 1. CHAT WIDGET FIRST VISIT HANDSHAKE REGISTER
     if (req.method === 'GET' && req.query.action === 'get_id') {
-      const nextIdNumber = await redis.incr('chat:user_counter');
-      return res.status(200).json({ roomId: `User_${nextIdNumber}` });
+      const { roomId } = req.query;
+      if (!roomId) return res.status(400).json({ error: 'Missing roomId query parameter' });
+      
+      const cleanRoomId = roomId.replace('chat:room:', '');
+      
+      // WhatsApp Fix: Pre-registers user ID into your active channels immediately so admin.html sees them on click
+      const roomExists = await redis.hexists('chat:active_rooms', cleanRoomId);
+      if (!roomExists) {
+        await redis.hset('chat:active_rooms', { [cleanRoomId]: Date.now() });
+      }
+      
+      return res.status(200).json({ roomId: cleanRoomId });
     }
 
     // 2. POST A NEW CHAT MESSAGE
@@ -102,7 +108,19 @@ export default async function handler(req, res) {
       if (!roomId) return res.status(400).json({ error: 'Missing roomId' });
       const cleanRoomId = roomId.replace('chat:room:', '');
       
-      const messages = await redis.lrange(`chat:room:${cleanRoomId}`, 0, -1);
+      // WhatsApp Fix: Query list elements cleanly straight from raw database arrays
+      const messagesRaw = await redis.lrange(`chat:room:${cleanRoomId}`, 0, -1) || [];
+      const messages = messagesRaw.map(msg => {
+        if (typeof msg === 'string') {
+          try {
+            return JSON.parse(msg);
+          } catch (e) {
+            return { sender: 'user', text: msg, timestamp: Date.now() };
+          }
+        }
+        return msg;
+      });
+
       return res.status(200).json({ messages });
     }
 
