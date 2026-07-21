@@ -302,6 +302,10 @@ const API_URL = "/api/chat";
 
 // 1. Lock in the unique counter identity directly inside permanent device storage cache
 let myRoomId = localStorage.getItem('chat_room_id');
+if (!myRoomId) {
+    myRoomId = String(Math.floor(Math.random() * 10000) + 1);
+    localStorage.setItem('chat_room_id', myRoomId);
+}
 
 const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),e=document.getElementById("e"),i=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;
 
@@ -319,17 +323,10 @@ if(j){j.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);}
 
 // ASYNC REGISTRATION: Claims a permanent User serial tracking index ID from your Vercel DB
 async function initializeUserIdentity() {
-    if (!myRoomId) {
-        try {
-            const res = await fetch(`${API_URL}?action=get_id`);
-            if (res.ok) {
-                const data = await res.json();
-                myRoomId = data.roomId;
-                localStorage.setItem('chat_room_id', myRoomId); // Saves permanently on their phone/PC
-            }
-        } catch (err) {
-            console.error("Identity collection drop fallback:", err);
-        }
+    try {
+        await fetch(`${API_URL}?action=get_id&roomId=${myRoomId}`).catch(() => {});
+    } catch (err) {
+        console.error("Identity collection drop fallback:", err);
     }
 }
 
@@ -437,7 +434,8 @@ k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
 const move=ev=>{
   if(!o){
     drag=1;
-    const t=ev.touches?ev.touches:ev;
+    // FIXED FOR MOBILE: Isolates the primary first touch vector index reference item
+    const t=(ev.touches && ev.touches.length) ? ev.touches[0] : ev;
     b.style.bottom=b.style.right="auto";
     b.style.left=(lx+t.clientX-x)+"px";
     b.style.top=(ly+t.clientY-y)+"px";
@@ -450,7 +448,8 @@ const start=ev=>{
   }
   if(!o){
     drag=0;
-    const t=ev.touches?ev.touches:ev;
+    // FIXED FOR MOBILE: Isolates the primary first touch vector index reference item
+    const t=(ev.touches && ev.touches.length) ? ev.touches[0] : ev;
     x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;
     document.onmousemove=document.ontouchmove=move;
     document.onmouseup=document.ontouchend=()=>{document.onmousemove=document.ontouchmove=null;setTimeout(()=>drag=0,100)}
