@@ -35,6 +35,6 @@ header{background:#202c33;color:#e9edef;padding:10px;padding-top:calc(10px + env
 
 // PWA REGISTER
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
-let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
+let deferredPrompt; window.addEventListener('beforeinstallprompt', (e) => { deferredPrompt = e; });
 
 async function sequenceLoop(){await loadRooms();if(selectedRoomId){await getMessages();}setTimeout(sequenceLoop,4000);}sequenceLoop();</script></body></html>
