@@ -318,7 +318,7 @@ const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document
 const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};
 const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};const G=()=>{const z=b.getBoundingClientRect();let q=z.top-c.offsetHeight-10,w=z.right+10;if(w+c.offsetWidth>innerWidth-10)w=z.left-c.offsetWidth-10;if(q<10)q=z.bottom+10;c.style.top=Math.min(Math.max(q,10),innerHeight-c.offsetHeight-10)+'px';c.style.left=Math.min(Math.max(w,10),innerWidth-c.offsetWidth-10)+'px'};
 
-if(c){c.style.zIndex="999999";c.style.pointerEvents="auto";}
+if(c){c.style.zIndex="999";c.style.pointerEvents="auto";}
 if(i){
   i.style.pointerEvents="auto";i.style.userSelect="text";i.style.webkitUserSelect="text";i.style.cursor="text";
   i.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);
