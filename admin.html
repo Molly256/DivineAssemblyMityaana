@@ -35,23 +35,51 @@ header{background:#202c33;color:#e9edef;padding:10px;padding-top:calc(10px + env
 
 // PWA REGISTER
 if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');
-  });
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); });
 }
 
-let deferredPrompt; 
+let deferredPrompt = null;
+// 1. Create a manual install button and put it inside your sidebar header
+window.addEventListener('load', () => {
+  const shdElement = document.querySelector('.shd');
+  if (shdElement) {
+    const installBtn = document.createElement('button');
+    installBtn.id = 'manual-pwa-btn';
+    installBtn.className = 'ref-btn';
+    installBtn.style.background = '#dc2626';
+    installBtn.style.color = '#fff';
+    installBtn.style.display = 'none'; // Hidden until browser is ready
+    installBtn.innerText = 'Install App 📲';
+    
+    // Insert it next to the Sync button
+    shdElement.appendChild(installBtn);
+
+    // 3. When you tap the button, force the app to install
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+      }
+    });
+  }
+});
+
+// 2. Capture the install permission and reveal your button
 window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); 
-  deferredPrompt = e; 
-  
-  // Forces the native installation prompt to pop up instantly after 1 second
-  setTimeout(() => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt = null;
-    }
-  }, 1000);
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('manual-pwa-btn');
+  if (btn) btn.style.display = 'inline-block';
+});
+
+// Hide button if already installed
+window.addEventListener('appinstalled', () => {
+  const btn = document.getElementById('manual-pwa-btn');
+  if (btn) btn.style.display = 'none';
 });
 
 async function sequenceLoop(){await loadRooms();if(selectedRoomId){await getMessages();}setTimeout(sequenceLoop,4000);}sequenceLoop();</script></body></html>
