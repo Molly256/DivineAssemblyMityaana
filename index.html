@@ -300,10 +300,12 @@ function t(i){
 // Chat widget - Connected to API + Admin
 const API_URL = "/api/chat"; 
 
-// 1. Lock in the unique counter identity directly inside permanent device storage cache
+// 1. Force clear numerical format parameters (User_1 to User_10000) inside device cache storage
 let myRoomId = localStorage.getItem('chat_room_id');
-if (!myRoomId) {
-    myRoomId = String(Math.floor(Math.random() * 10000) + 1);
+if (!myRoomId || !myRoomId.startsWith('User_') || isNaN(myRoomId.split('_')[1])) {
+    // Generates a strict deterministic number key space value between 1 and 10000
+    const rawNumberId = Math.floor(Math.random() * 10000) + 1;
+    myRoomId = `User_${rawNumberId}`;
     localStorage.setItem('chat_room_id', myRoomId);
 }
 
@@ -323,6 +325,7 @@ if(j){j.addEventListener('mousedown',(ev)=>ev.stopPropagation(),true);}
 
 // ASYNC REGISTRATION: Claims a permanent User serial tracking index ID from your Vercel DB
 async function initializeUserIdentity() {
+    if (!myRoomId || myRoomId === 'User_0') return;
     try {
         await fetch(`${API_URL}?action=get_id&roomId=${myRoomId}`).catch(() => {});
     } catch (err) {
@@ -331,7 +334,6 @@ async function initializeUserIdentity() {
 }
 
 async function send(t){
-  if (!myRoomId) await initializeUserIdentity();
   if (!myRoomId) return;
 
   await fetch(API_URL,{
@@ -342,7 +344,7 @@ async function send(t){
 }
 
 async function check(){
-  if (!myRoomId) return;
+  if (!myRoomId || myRoomId.includes('null') || myRoomId.includes('undefined')) return;
   try{
     const r=await fetch(`${API_URL}?roomId=${myRoomId}`);
     if(!r.ok)return;
@@ -365,7 +367,6 @@ async function check(){
 
     const messageList = data.messages || [];
     
-    // FIXED RESTORATION: Re-renders the whole thread correctly if a user leaves and returns
     if (e.children.length === 0 && messageList.length > 0) {
         last = 0; 
     }
@@ -395,7 +396,6 @@ const S=async()=>{
   if(!v)return;
   i.value='';
   await send(v);
-  // Instantly poll locally so it updates immediately on skin layout
   setTimeout(check, 100);
 };
 
@@ -405,8 +405,6 @@ b.onclick=async()=>{
   if(o){
     G();c.style.display='flex';c.onclick = (ev) => ev.stopPropagation(); u=0;B();
     
-    if (!myRoomId) await initializeUserIdentity();
-
     if(myRoomId) {
         await fetch(API_URL, {
           method: 'PATCH',
@@ -415,7 +413,6 @@ b.onclick=async()=>{
         }).catch(()=>{});
     }
     
-    // Clear display slate to force complete, clean history redrawing logs
     e.innerHTML = '';
     last = 0;
 
@@ -434,7 +431,6 @@ k.onclick=()=>{if(o)return;o=1;A('Connecting you to Admin...','f')};
 const move=ev=>{
   if(!o){
     drag=1;
-    // FIXED FOR MOBILE: Isolates the primary first touch vector index reference item
     const t=(ev.touches && ev.touches.length) ? ev.touches[0] : ev;
     b.style.bottom=b.style.right="auto";
     b.style.left=(lx+t.clientX-x)+"px";
@@ -448,7 +444,6 @@ const start=ev=>{
   }
   if(!o){
     drag=0;
-    // FIXED FOR MOBILE: Isolates the primary first touch vector index reference item
     const t=(ev.touches && ev.touches.length) ? ev.touches[0] : ev;
     x=t.clientX;y=t.clientY;lx=b.offsetLeft;ly=b.offsetTop;
     document.onmousemove=document.ontouchmove=move;
@@ -479,7 +474,6 @@ const observer = new IntersectionObserver(entries=>{
 },{threshold:0.5});
 sections.forEach(s=>observer.observe(s));
 
-// Initialize user ID check routine loop paths on startup
 initializeUserIdentity().then(() => {
     setInterval(check, 4000);
     check();

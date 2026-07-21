@@ -6,20 +6,17 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-function generateUniqueUsername(roomId) {
-  if (!roomId || roomId === 'null' || roomId === 'undefined') return "Anonymous Guest";
-  const adjectives = ["Bright", "Noble", "Swift", "Calm", "Kind", "Brave", "Joyful", "Wise", "Active", "Graceful"];
-  const nouns = ["Beacon", "Harbor", "Shield", "Eagle", "Falcon", "Cheetah", "River", "Haven", "Runner", "Dove"];
-  
-  let hash = 0;
-  for (let i = 0; i < roomId.length; i++) {
-    hash = roomId.charCodeAt(i) + ((hash << 5) - hash);
+// Enforces exact capitalization matching (e.g., User_14 or User_1089) to map to chat:room:User_... keys
+function getExactCaseId(roomId) {
+  if (!roomId) return "";
+  // Strip prefixes and normalize format with a capital 'User_'
+  let cleanId = roomId.replace('chat:room:', '').replace('chat:unread:', '').trim();
+  if (cleanId.toLowerCase().startsWith('user_')) {
+    return 'User_' + cleanId.substring(5);
+  } else if (cleanId.toLowerCase().startsWith('user')) {
+    return 'User_' + cleanId.substring(4);
   }
-  
-  const adjIndex = Math.abs(hash) % adjectives.length;
-  const nounIndex = Math.abs(hash * 3) % nouns.length;
-  
-  return `${adjectives[adjIndex]} ${nouns[nounIndex]}`;
+  return cleanId; // Fallback for mixed tokens like CVBT6PD
 }
 
 export default async function handler(req, res) {
@@ -37,7 +34,7 @@ export default async function handler(req, res) {
       const { roomId } = req.body;
       if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
 
-      const cleanId = roomId.replace('chat:room:', '');
+      const cleanId = getExactCaseId(roomId);
       await redis.del(`chat:room:${cleanId}`);
       await redis.del(`chat:unread:${cleanId}`);
       await redis.hdel('chat:active_rooms', cleanId);
@@ -49,12 +46,12 @@ export default async function handler(req, res) {
       const { roomId } = req.query;
       if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
       
-      const cleanRoomId = roomId.replace('chat:room:', '');
-      const roomExists = await redis.hexists('chat:active_rooms', cleanRoomId);
+      const cleanId = getExactCaseId(roomId);
+      const roomExists = await redis.hexists('chat:active_rooms', cleanId);
       if (!roomExists) {
-        await redis.hset('chat:active_rooms', { [cleanRoomId]: Date.now() });
+        await redis.hset('chat:active_rooms', { [cleanId]: Date.now() });
       }
-      return res.status(200).json({ roomId: cleanRoomId });
+      return res.status(200).json({ roomId: cleanId });
     }
 
     // 3. POST A NEW MESSAGE
@@ -64,17 +61,17 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Missing or invalid fields' });
       }
       
-      const cleanRoomId = roomId.replace('chat:room:', ''); 
+      const cleanId = getExactCaseId(roomId); 
       const newMessage = { sender, text, timestamp: Date.now() };
       
-      await redis.rpush(`chat:room:${cleanRoomId}`, JSON.stringify(newMessage));
-      await redis.ltrim(`chat:room:${cleanRoomId}`, -1000, -1);
-      await redis.hset('chat:active_rooms', { [cleanRoomId]: Date.now() });
+      await redis.rpush(`chat:room:${cleanId}`, JSON.stringify(newMessage));
+      await redis.ltrim(`chat:room:${cleanId}`, -1000, -1);
+      await redis.hset('chat:active_rooms', { [cleanId]: Date.now() });
 
       if (sender === 'user') {
-        await redis.hincrby(`chat:unread:${cleanRoomId}`, 'admin', 1);
+        await redis.hincrby(`chat:unread:${cleanId}`, 'admin', 1);
       } else if (sender === 'admin') {
-        await redis.hincrby(`chat:unread:${cleanRoomId}`, 'user', 1);
+        await redis.hincrby(`chat:unread:${cleanId}`, 'user', 1);
       }
       return res.status(200).json({ success: true });
     }
@@ -87,24 +84,28 @@ export default async function handler(req, res) {
         const rooms = await redis.hgetall('chat:active_rooms') || {};
         const list = [];
         for (const id of Object.keys(rooms)) {
-          // Guard block: ignore broken null or undefined keys stored historically
           if (!id || id === 'null' || id === 'undefined' || id.trim() === '') continue;
           
-          const unread = await redis.hgetall(`chat:unread:${id}`) || {};
+          const cleanId = getExactCaseId(id);
+          const unread = await redis.hgetall(`chat:unread:${cleanId}`) || {};
+          
+          // Formats case-sensitive string into dashboard label "User #14"
+          let displayLabel = cleanId.replace('User_', 'User #');
+          
           list.push({ 
-            id: id, 
+            id: cleanId, 
             lastActive: rooms[id], 
             adminUnread: parseInt(unread.admin || 0),
-            displayName: generateUniqueUsername(id)
+            displayName: displayLabel
           });
         }
         return res.status(200).json(list);
       }
 
       if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
-      const cleanRoomId = roomId.replace('chat:room:', '');
+      const cleanId = getExactCaseId(roomId);
       
-      const messagesRaw = await redis.lrange(`chat:room:${cleanRoomId}`, 0, -1) || [];
+      const messagesRaw = await redis.lrange(`chat:room:${cleanId}`, 0, -1) || [];
       const messages = messagesRaw.map(msg => {
         if (typeof msg === 'string') {
           try { return JSON.parse(msg); } catch (e) { return { sender: 'user', text: msg, timestamp: Date.now() }; }
@@ -120,8 +121,8 @@ export default async function handler(req, res) {
       if (!roomId || roomId === 'null' || roomId === 'undefined' || !clearFor) {
         return res.status(400).json({ error: 'Invalid payload elements' });
       }
-      const cleanRoomId = roomId.replace('chat:room:', '');
-      await redis.hset(`chat:unread:${cleanRoomId}`, { [clearFor]: 0 });
+      const cleanId = getExactCaseId(roomId);
+      await redis.hset(`chat:unread:${cleanId}`, { [clearFor]: 0 });
       return res.status(200).json({ success: true });
     }
     
