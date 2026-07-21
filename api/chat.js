@@ -9,14 +9,13 @@ const redis = new Redis({
 // Enforces exact capitalization matching (e.g., User_14 or User_1089) to map to chat:room:User_... keys
 function getExactCaseId(roomId) {
   if (!roomId) return "";
-  // Strip prefixes and normalize format with a capital 'User_'
   let cleanId = roomId.replace('chat:room:', '').replace('chat:unread:', '').trim();
   if (cleanId.toLowerCase().startsWith('user_')) {
     return 'User_' + cleanId.substring(5);
   } else if (cleanId.toLowerCase().startsWith('user')) {
     return 'User_' + cleanId.substring(4);
   }
-  return cleanId; // Fallback for mixed tokens like CVBT6PD
+  return cleanId;
 }
 
 export default async function handler(req, res) {
@@ -88,8 +87,6 @@ export default async function handler(req, res) {
           
           const cleanId = getExactCaseId(id);
           const unread = await redis.hgetall(`chat:unread:${cleanId}`) || {};
-          
-          // Formats case-sensitive string into dashboard label "User #14"
           let displayLabel = cleanId.replace('User_', 'User #');
           
           list.push({ 
@@ -106,12 +103,15 @@ export default async function handler(req, res) {
       const cleanId = getExactCaseId(roomId);
       
       const messagesRaw = await redis.lrange(`chat:room:${cleanId}`, 0, -1) || [];
+      
+      // WhatsApp Fix: Converts mixed types or objects into strings so admin.html parses perfectly
       const messages = messagesRaw.map(msg => {
-        if (typeof msg === 'string') {
-          try { return JSON.parse(msg); } catch (e) { return { sender: 'user', text: msg, timestamp: Date.now() }; }
+        if (typeof msg === 'object' && msg !== null) {
+          return JSON.stringify(msg);
         }
-        return msg;
+        return String(msg);
       });
+
       return res.status(200).json({ messages });
     }
 
