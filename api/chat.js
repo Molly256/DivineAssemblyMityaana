@@ -6,13 +6,11 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-// Dynamic Name Generator mapping user tracking IDs to distinct name strings cleanly
 function generateUniqueUsername(roomId) {
-  if (!roomId) return "Anonymous Guest";
+  if (!roomId || roomId === 'null' || roomId === 'undefined') return "Anonymous Guest";
   const adjectives = ["Bright", "Noble", "Swift", "Calm", "Kind", "Brave", "Joyful", "Wise", "Active", "Graceful"];
   const nouns = ["Beacon", "Harbor", "Shield", "Eagle", "Falcon", "Cheetah", "River", "Haven", "Runner", "Dove"];
   
-  // Creates a clean mathematical deterministic seed based on character keys strings
   let hash = 0;
   for (let i = 0; i < roomId.length; i++) {
     hash = roomId.charCodeAt(i) + ((hash << 5) - hash);
@@ -25,57 +23,52 @@ function generateUniqueUsername(roomId) {
 }
 
 export default async function handler(req, res) {
-  // CORS Configuration Allowances
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS'); // Enabled DELETE methods safely
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Auth');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // 0. ADMIN-ONLY COMPLETE CONVERSATION THREAD WIPE (DELETE)
+    // 1. DELETE CONVERSATION
     if (req.method === 'DELETE') {
       const authHeader = req.headers['x-admin-auth'];
       if (authHeader !== 'Mityana9') return res.status(403).json({ error: 'Unauthorized' });
 
       const { roomId } = req.body;
-      if (!roomId) return res.status(400).json({ error: 'Missing roomId' });
+      if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
 
       const cleanId = roomId.replace('chat:room:', '');
-      
-      // WhatsApp Fix: Permanently destroy specific random ID keys directly without format manipulation mutations
       await redis.del(`chat:room:${cleanId}`);
       await redis.del(`chat:unread:${cleanId}`);
       await redis.hdel('chat:active_rooms', cleanId);
-
       return res.status(200).json({ success: true });
     }
 
-    // 1. CHAT WIDGET FIRST VISIT HANDSHAKE REGISTER
+    // 2. FIRST VISIT WIDGET HANDSHAKE
     if (req.method === 'GET' && req.query.action === 'get_id') {
       const { roomId } = req.query;
-      if (!roomId) return res.status(400).json({ error: 'Missing roomId query parameter' });
+      if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
       
       const cleanRoomId = roomId.replace('chat:room:', '');
-      
-      // WhatsApp Fix: Pre-registers user ID into your active channels immediately so admin.html sees them on click
       const roomExists = await redis.hexists('chat:active_rooms', cleanRoomId);
       if (!roomExists) {
         await redis.hset('chat:active_rooms', { [cleanRoomId]: Date.now() });
       }
-      
       return res.status(200).json({ roomId: cleanRoomId });
     }
 
-    // 2. POST A NEW CHAT MESSAGE
+    // 3. POST A NEW MESSAGE
     if (req.method === 'POST') {
       const { sender, text, roomId } = req.body;
-      if (!sender || !text || !roomId) return res.status(400).json({ error: 'Missing fields' });
+      if (!sender || !text || !roomId || roomId === 'null' || roomId === 'undefined') {
+        return res.status(400).json({ error: 'Missing or invalid fields' });
+      }
       
       const cleanRoomId = roomId.replace('chat:room:', ''); 
       const newMessage = { sender, text, timestamp: Date.now() };
       
       await redis.rpush(`chat:room:${cleanRoomId}`, JSON.stringify(newMessage));
-      await redis.ltrim(`chat:room:${cleanRoomId}`, -1000, -1); // Keeps up to 1000 logs without deleting!
+      await redis.ltrim(`chat:room:${cleanRoomId}`, -1000, -1);
       await redis.hset('chat:active_rooms', { [cleanRoomId]: Date.now() });
 
       if (sender === 'user') {
@@ -86,7 +79,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
-    // 3. GET MESSAGES OR LIST ACTIVE ROOM CHANNELS
+    // 4. GET MESSAGES OR LIST ROOMS
     if (req.method === 'GET') {
       const { roomId, type } = req.query;
 
@@ -94,43 +87,41 @@ export default async function handler(req, res) {
         const rooms = await redis.hgetall('chat:active_rooms') || {};
         const list = [];
         for (const id of Object.keys(rooms)) {
+          // Guard block: ignore broken null or undefined keys stored historically
+          if (!id || id === 'null' || id === 'undefined' || id.trim() === '') continue;
+          
           const unread = await redis.hgetall(`chat:unread:${id}`) || {};
           list.push({ 
             id: id, 
             lastActive: rooms[id], 
             adminUnread: parseInt(unread.admin || 0),
-            displayName: generateUniqueUsername(id) // Binds unique clean usernames mapping automatically!
+            displayName: generateUniqueUsername(id)
           });
         }
         return res.status(200).json(list);
       }
 
-      if (!roomId) return res.status(400).json({ error: 'Missing roomId' });
+      if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
       const cleanRoomId = roomId.replace('chat:room:', '');
       
-      // WhatsApp Fix: Query list elements cleanly straight from raw database arrays
       const messagesRaw = await redis.lrange(`chat:room:${cleanRoomId}`, 0, -1) || [];
       const messages = messagesRaw.map(msg => {
         if (typeof msg === 'string') {
-          try {
-            return JSON.parse(msg);
-          } catch (e) {
-            return { sender: 'user', text: msg, timestamp: Date.now() };
-          }
+          try { return JSON.parse(msg); } catch (e) { return { sender: 'user', text: msg, timestamp: Date.now() }; }
         }
         return msg;
       });
-
       return res.status(200).json({ messages });
     }
 
-    // 4. RESET BADGE METRICS
+    // 5. RESET BADGE METRICS
     if (req.method === 'PATCH') {
       const { roomId, clearFor } = req.body;
-      if (roomId && clearFor) {
-        const cleanRoomId = roomId.replace('chat:room:', '');
-        await redis.hset(`chat:unread:${cleanRoomId}`, { [clearFor]: 0 });
+      if (!roomId || roomId === 'null' || roomId === 'undefined' || !clearFor) {
+        return res.status(400).json({ error: 'Invalid payload elements' });
       }
+      const cleanRoomId = roomId.replace('chat:room:', '');
+      await redis.hset(`chat:unread:${cleanRoomId}`, { [clearFor]: 0 });
       return res.status(200).json({ success: true });
     }
     
