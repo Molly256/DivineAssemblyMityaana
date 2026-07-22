@@ -133,7 +133,8 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
   <li><a href="#join" data-emoji="🤝">Join</a></li>
 </ul>
 
-<section id="about" style="position:relative; padding:60px 20px; overflow:hidden;">
+<section id="about" style="position:relative; padding:60px 20px; max-width:900px; margin:0 auto; text-align:center; overflow:hidden;">
+  
   <!-- WATERMARK BACKGROUND FOR WHOLE SECTION -->
   <div style="
     position:absolute;
@@ -150,12 +151,13 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
   "></div>
 
   <!-- ALL CONTENT ON TOP -->
-  <div class="c" style="position:relative; z-index:1; text-align:center">
+  <div style="position:relative; z-index:1;">
+    
     <span class="d">Non-Profit Assembly • Mityana District</span>
     
-    <!-- CHANGED TO ESTABLISHMENT -->
-    <h1 style="font-size:1.1rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#000; margin:10px 0 20px 0;">
-      ESTABLISHMENT
+    <!-- 1. About us  HEADER - BOLD BLACK -->
+    <h1 style="font-size:2.2rem; font-weight:900; color:#000; margin:10px 0 30px 0;">
+      About Us
     </h1>
 
     <p>Divine District Assembly was established on 29th December 2021.<br><br>
@@ -163,13 +165,17 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
     We stand in alignment with the C.A.R.E | Center for Armity and Restoration of The Earth.<br><br>
     We are dedicated to setting up community development assemblies across mityana district to elevate community standards and implement the restoration plan based on natural law.</p>
 
-        <!-- DOWNLOAD BUTTON -->
-    <div style="margin-top:30px;">
-      <a href="images/A PDF.pdf" download id="pdf-btn-about"
-         style="display:inline-block; padding:12px 24px; border:2px solid #000; border-radius:8px; background:#fff; font-weight:bold; text-decoration:none; color:#000;">
-        📄 DOWNLOAD PDF
-      </a>
-    </div>
+    <!-- 2. ESTABLISHMENT SUB HEADER -->
+    <h2 style="font-size:1.1rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#000; margin:40px 0 20px 0;">
+      ESTABLISHMENT
+    </h2>
+
+    <!-- 3. DOWNLOAD BUTTON -->
+    <a href="images/APDF.pdf" download id="pdf-btn-about" 
+       style="display:inline-block; padding:12px 24px; border:2px solid #000; border-radius:8px; background:#fff; font-weight:bold; text-decoration:none; color:#000;">
+      📄 DOWNLOAD PDF
+    </a>
+
   </div>
 </section>
 
@@ -494,7 +500,7 @@ document.getElementById('pdf-btn').onclick=function(){
   },300);
 };
 
-<a href="images/A PDF.pdf" download="Establishment" id="pdf-btn-about" style="display:inline-block; padding:12px 24px; border:2px solid #000; border-radius:8px; background:#fff; font-weight:bold; text-decoration:none; color:#000;">
+<a href="images/APDF.pdf" download="Establishment" id="pdf-btn-about" style="display:inline-block; padding:12px 24px; border:2px solid #000; border-radius:8px; background:#fff; font-weight:bold; text-decoration:none; color:#000;">
   📄 DOWNLOAD PDF
 </a>
 const sections = document.querySelectorAll('section');
