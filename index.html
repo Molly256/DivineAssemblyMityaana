@@ -133,20 +133,47 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
   <li><a href="#join" data-emoji="🤝">Join</a></li>
 </ul>
 
-<section id="about">
-  <div class="c" style="text-align:center">
+<section id="about" style="position:relative; padding:60px 20px; overflow:hidden;">
+  <!-- WATERMARK BACKGROUND FOR WHOLE SECTION -->
+  <div style="
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:400px;
+    height:400px;
+    background:url('images/m.jpg') no-repeat center;
+    background-size:contain;
+    opacity:0.06;
+    z-index:0;
+    pointer-events:none;
+  "></div>
+
+  <!-- ALL CONTENT ON TOP -->
+  <div class="c" style="position:relative; z-index:1; text-align:center">
     <span class="d">Non-Profit Assembly • Mityana District</span>
-    <h1>About us</h1>
+    
+    <!-- CHANGED TO ESTABLISHMENT -->
+    <h1 style="font-size:1.1rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#000; margin:10px 0 20px 0;">
+      ESTABLISHMENT
+    </h1>
+
     <p>Divine District Assembly was established on 29th December 2021.<br><br>
     We serve as the restoration arm of mityana district. As a non-profit body, our focus is to represent the people of mityana and promote development and empowerment at the grassroot level.<br><br>
     We stand in alignment with the C.A.R.E | Center for Armity and Restoration of The Earth.<br><br>
     We are dedicated to setting up community development assemblies across mityana district to elevate community standards and implement the restoration plan based on natural law.</p>
 
-    <h2 style="margin-top:40px;font-size:1.8rem;text-transform:uppercase;font-weight:700;letter-spacing:1px;">MITYANA REGIONAL PROJECT PROPOSAL</h2>
-    <button class="x" id="pdf-btn-about" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 DOWNLOAD PDF</button>
+        <!-- DOWNLOAD BUTTON -->
+    <div style="margin-top:30px;">
+      <a href="images/A PDF.pdf" download id="pdf-btn-about"
+         style="display:inline-block; padding:12px 24px; border:2px solid #000; border-radius:8px; background:#fff; font-weight:bold; text-decoration:none; color:#000;">
+        📄 DOWNLOAD PDF
+      </a>
+    </div>
   </div>
 </section>
 
+<!-- NEXT SECTION STARTS HERE -->
 <section id="assemblies">
   <div class="c">
     <h2>What Are Community Assemblies?</h2>
@@ -190,7 +217,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 <p>Community assemblies are invited to submit proposals to:</p>
 <a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:15px;display:inline-block">mityana.projects@protonmail.com</a>
 
-<h2 style="margin-top:25px;font-size:1.8rem;text-transform:uppercase;font-weight:700;letter-spacing:1px;">MITYANA REGIONAL PROJECT PROPOSAL</h2>
+<h2 style="margin-top:25px;font-size:1.8rem;text-transform:uppercase;font-weight:700;letter-spacing:1px;">Mityana Regional Project Proposal</h2>
 <button class="x" id="pdf-btn" style="margin-top:12px;background:#fff;color:#000;border:1px solid #000">📄 DOWNLOAD PDF</button>
 </div>
 </section> 
@@ -198,8 +225,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 <div class="c">
 <h2>Join the Movement</h2>
 <p>We invite all residents of Mityana District to join our Community assemblies and be part of the movement towards self governance. Your participation is crucial for the success of our restoration plans.</p>
-<div class="e">divinedistrictassemblymityana@gmail.com</div>
-<a href="mailto:divinedistrictassemblymityana@gmail.com" class="x" style="margin-top:25px">divinedistrictassemblymityana@gmail.com</a>
+<a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:25px">mityana.projects@protonmail.com</a>
 </div>
 </section>
 <section class="s" id="shoe-donate">
@@ -216,6 +242,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 <p>Sometimes the smallest things make the biggest difference. Your single act of kindness brings warmth, comfort, and a happy smile to someone in need.</p>
 <h3>Assembly Field Team Available</h3>
 <p>For distribution of donated shoes- comprehensive training provided,commit to measurable impact</p>
+     NOTE:
 <p>- Financial or in-kind shoe donations may not be feasible for all supporters.</p>
 <p>- If donating shoes isn’t an option, there are other meaningful ways to help.</p>
 <p>- A monetary donation is another way to contribute. Your support enables us to:</p>
@@ -260,7 +287,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </div>
 </div>
 </section>
-<footer>© 2026 Divine District Assembly - Mityana District. Restoring Communities Through Natural Raw.</footer>
+<footer>© 2026 Divine District Assembly - Mityana. Restoring communities based on natural law.</footer>
 </div>
 <div id="cb">🎧<span id="b">1</span></div>
 <div id="c">
@@ -467,14 +494,9 @@ document.getElementById('pdf-btn').onclick=function(){
   },300);
 };
 
-document.getElementById('pdf-btn-about').onclick=function(){
-  if(!o){b.click()}
-  setTimeout(()=>{
-    i.value='hey 👋 I want to download PDF';
-    S();
-  },300);
-};
-
+<a href="images/A PDF.pdf" download="Establishment" id="pdf-btn-about" style="display:inline-block; padding:12px 24px; border:2px solid #000; border-radius:8px; background:#fff; font-weight:bold; text-decoration:none; color:#000;">
+  📄 DOWNLOAD PDF
+</a>
 const sections = document.querySelectorAll('section');
 const activeNavTabs = document.querySelectorAll('.t');
 const observer = new IntersectionObserver(entries=>{
