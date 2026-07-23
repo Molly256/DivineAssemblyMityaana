@@ -12,7 +12,7 @@ body{color:#333;font-weight:400;line-height:1.8;padding-bottom:80px}
 header{position:sticky;top:0;width:100%;background:#00ff7f;color:#000;display:flex;justify-content:center;align-items:center;padding:14px 20px;z-index:1000;border-bottom:1px solid #00cc66;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .l{font-weight:600;font-size:1rem;color:#000;letter-spacing:.5px;text-align:center}
 .b{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;align-items:center;padding:10px 4px calc(14px + env(safe-area-inset-bottom));z-index:1001;box-shadow:0 -2px 8px rgba(0,0,0,.05);touch-action: manipulation;}
-.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:#000;font-size:.65rem;font-weight:600;background:none;border:0;cursor:pointer;padding:10px 6px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none;pointer-events:auto} /* ADDED pointer-events:auto */
+.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:#000;font-size:.65rem;font-weight:600;background:none;border:0;cursor:pointer;padding:10px 6px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none}
 .t span.e,.h span.e{font-size:1.6rem;line-height:1;background:transparent!important;pointer-events:none}
 .h.active span.e{transform:rotate(90deg)}
 .t:active,.h:active{ background:#f0fdf4!important; transform:scale(.96) }
@@ -47,7 +47,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 .w h2{font-size:1.8rem;margin-bottom:10px}
 .w>p{font-size:.95rem;color:#555;margin-bottom:40px}
 .o img{width:80px;height:50px;object-fit:contain;margin-bottom:10px}
-.j{background:#fafafa;border:1px solid #e5e5;border-radius:16px;padding:30px 20px;cursor:pointer;max-width:300px;margin:0 auto 20px;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.j{background:#fafafa;border:1px solid #e5e5e5;border-radius:16px;padding:30px 20px;cursor:pointer;max-width:300px;margin:0 auto 20px;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .j:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
 .j img{width:140px;margin-bottom:15px}
 .j h3{font-size:1.2rem;color:#000;margin-bottom:10px}
@@ -90,11 +90,100 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
   <li><a href="#join" data-emoji="🤝">Join</a></li>
 </ul>
 
-...all your sections stay the same...
+<section id="about" style="position:relative; padding:60px 20px; max-width:900px; margin:0 auto; text-align:center; overflow:hidden;">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);width:400px;height:400px;background:url('images/m.jpg') no-repeat center;background-size:contain;opacity:0.06;z-index:0;pointer-events:none;"></div>
+  <div style="position:relative; z-index:1;">
+    <span class="d">Non-Profit Assembly • Mityana District</span>
+    <h1 style="font-size:2.2rem; font-weight:900; color:#000; margin:10px 0 30px 0;">About Us</h1>
+    <p>Divine District Assembly was established on 29th December 2021.<br><br>
+    We serve as the restoration arm of mityana district. As a non-profit body, our focus is to represent the people of mityana and promote development and empowerment at the grassroot level.<br><br>
+    We stand in alignment with the C.A.R.E | Center for Armity and Restoration of The Earth.<br><br>
+    We are dedicated to setting up community development assemblies across mityana district to elevate community standards and implement the restoration plan based on natural law.</p>
+    <h2 style="font-size:1.1rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#000; margin:40px 0 20px 0;">ESTABLISHMENT</h2>
+    <a href="images/APDF.pdf" download id="pdf-btn-about" style="display:inline-block; padding:12px 24px; border:2px solid #000; border-radius:8px; background:#fff; font-weight:bold; text-decoration:none; color:#000;">📄 DOWNLOAD PDF</a>
+  </div>
+</section>
+
+<section id="assemblies"><div class="c"><h2>What Are Community Assemblies?</h2><p>Our Community development assemblies serve as platforms for citizens to come together, discuss their needs, and collaborate on actionable plans that address local issues. By harnessing collective wisdom, we can create meaningful change.</p><p><span class="z">No boss but associations of equal people</span> who want to transform the lives of the residents of their various communities for the better.</p></div></section>
+
+<section id="authority"><div class="c"><h2>Authority</h2><p>Kimberly Ann Goguen is the guardian of the planet, it's under her authority that we establish our assemblies. She has secured our freedom and sovereignty from the order that has held us in bondage for lifetime.</p><p>Now at this moment we have the opportunity to <span class="z">arm our rights as sovereign beings</span> and establish a framework for self governance and the restoration of earth.</p><p style="margin-top:20px;font-weight:700;color:#000">Kim holds multiple leadership roles, including:</p><div class="auth-list"><p>1. Universal Protection Unit Command (Ground Command/ Guardian)</p><p>2. Ambassador to Earth for the Universal Council for this version of Homosapiens/Humanity.</p><p>3. Director of Global Intelligence Agency (GIA) Clearance level 74/75.</p><p>4. Computroller of currencies worldwide.</p><p>5. Founder of the Unitednetwork.earth</p><p>6. Head of the C.A.R.E| Center for Armity and Restoration of the Earth.</p></div></div></section>
+
+<section id="restoration">
+  <div class="c">
+    <h2>Global Restoration Plan</h2>
+    <p>The overall mission or goal in the C.A.R.E movement is to use our energies in restoring this lovely planet called, Earth. the movement is dedicated to returning this planet to what our Creator/God intended it to originally be before it came under attack by certain unseen forces human agents whom you’ll eventually get to know about as you take some time to watch the many videos which are shared in this website <a href="https://unitednetwork.earth" target="_blank" class="y">unitednetwork.earth</a></p>
+    <p>I guess the first question that immediately springs to your mind is what I mean when I say, “restoring our planet to where we think it should be?” By the way, how is it possible that we can do this? First of all, the <span class="z">C.A.R.E</span> movement is strictly a SPIRITUAL group and we’re strongly anchored in the Divine work of our Creator Source/God.</p>
+    <p>Let me just confess by saying that I don’t know about you the religious people but I can evidently say that the Creator Source/God is real and not imaginary as many religions have been telling their followers for thousands of years. And because of our group’s unwavering abidance in who the Creator Source/God truly is, we have not gone wrong with whatever we’ve been doing on this journey for some time now. It’ll excite you to know that our Creator Source/God finally heard the cries of His people and accepted pleads for mercy and liberation after hundreds of thousands of years. He therefore moved to sign a new covenant with His suffering people right after accepting our pleads for help not very long ago.</p>
+    <p>As a result, He canceled every contract that the dark forces and their human agents have placed on all humanity unbeknownst to us for hundreds of thousands of years and this new covenant with humanity became effective from December 2012.</p>
+    <p>I’m sure some of you who have been following the developments in the world must have heard about what the former controllers referred to as “Y2K” where they said that the world was going to end whereby all of us were going to die and there would be no more planet Earth. Truth being told, it was actually the end of the dark forces and human agents world and not for us, the loving children of Source the Creator/God. So the hundreds of thousands of years of human suffering and enslavement timeline has changed in our favor now.</p>
+    <p>It’s interesting how they said that the world was going be over at that time and all of us were going to die. Remember the Biblical apocalypse? But here we are as human beings exactly ten long years after all the fear of the world ending which was circulated in the media by the former controllers and their satanic agents. In fact, the world’s population since that time has grown more 10% even though these evil creatures have been subjecting us to unnecessary wars, pestilence and diseases such as AIDS, Ebola and recently, the pandemic called Covid. Yet the world population currently stands at 8 billion people and we have not all died yet.</p>
+    <p>To add to what I said earlier, the result of the new covenant with the Creator Source/God, now returns every power back to we the members of the human family including our freedom where no other human being wields anymore power and authority over the others except the Creator Source/God who is the ONE and only KING in the universe. Among some of the powers that the Creator Source/God took away from the dark controllers and their human agents are the assets or wealth of the world.</p>
+    <p>These assets are now being managed by the leader of our movement C.A.R.E <span class="z">Kimberly Ann Goguen</span>. Kimberly's only plan is to return all this wealth directly back to the people instead of through the so-called governments as was the case in the old system. But, in order to carry out this plan, the people of the world must organize themselves at the community level where they are required to put forth project proposals which they know are near and dear to their communities heart. These projects must be geared towards eradicating poverty permanently by improving the living conditions of the people of world once and for all.</p>
+  </div>
+</section>
+
+<section id="community-projects">
+<div class="c" style="text-align:center">
+<h2>Community Projects & Programs</h2>
+<p>Community assemblies are invited to submit proposals to:</p>
+<a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:15px;display:inline-block">mityana.projects@protonmail.com</a>
+<h2 style="margin-top:25px;font-size:clamp(1.2rem, 4vw, 1.8rem);text-transform:none;font-weight:600;letter-spacing:0.5px;white-space:nowrap;">Mityana Regional Projects Proposal</h2>
+<button id="pdf-chat-btn" style="display:inline-block; margin-top:12px; padding:10px 20px; background:#fff; color:#000; border:1px solid #000; border-radius:6px; text-decoration:none; font-weight:600; cursor:pointer;">📄 DOWNLOAD PDF</button>
+</div>
+</section>
+
+<section id="join"><div class="c"><h2>Join the Movement</h2><p>We invite all residents of Mityana District to join our Community assemblies and be part of the movement towards self governance. Your participation is crucial for the success of our restoration plans.</p><a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:25px">mityana.projects@protonmail.com</a></div></section>
+
+<section class="s" id="shoe-donate">
+<div class="c">
+<h2>Shoe Donate</h2>
+<img src="images/shoes.jpg" alt="Shoes for donation" class="i">
+<div class="q">
+<p><em>A Smile from a Pair</em> is a vital community outreach operating under the Divine District Assembly in Mityana, Uganda. Our slogan <em>Give a Shoes, Restore Hope</em>.By collecting and distributing quality shoe donations to vulnerable individuals, the initiative provides critical foot protection, restores personal dignity, and promotes wellness and opportunity throughout the region.</p>
+<h3>Shoe donation benefits</h3>
+<p><strong>Protection</strong>: Safety on long, rough walks.</p>
+<p><strong>Confidence</strong>: Pride in the community.</p>
+<p><strong>Dignity</strong>: The fundamental feeling of being valued and cared for.</p>
+<p>A simple pair of shoes may seem small, but to someone else, it means dignity, confidence, and the feeling of being loved. You didn’t just give shoes—you <em>restored hope.</em></p>
+<p>Sometimes the smallest things make the biggest difference. Your single act of kindness brings warmth, comfort, and a happy smile to someone in need.</p>
+<h3>Assembly Field Team Available</h3>
+<p>For distribution of donated shoes- comprehensive training provided,commit to measurable impact</p>
+<p><strong>NOTE:</strong></p>
+<p>- Financial or in-kind shoe donations may not be feasible for all supporters.</p>
+<p>- If donating shoes isn’t an option, there are other meaningful ways to help.</p>
+<p>- A monetary donation is another way to contribute. Your support enables us to:</p>
+<p>- Collect, clean, and prepare shoes for distribution.</p>
+<p>- Reach communities with limited access to proper footwear</p>
+<p>- Cover logistics and transportation costs to deliver donations</p>
+<p>- Expand our outreach programs year-round</p>
+<p><br>Every contribution, regardless of size, moves us closer to that goal.</p>
+</div>
+
+<div class="w">
+<h2>Donate via Mobile Money</h2>
+<p>We accept MTN Mobile Money and Airtel Money. Tap to see number.</p>
+<div class="j" onclick="t('mtn')"><div class="o"><img src="images/mtn-momo.png" alt="MTN"></div><h3>MTN MoMo</h3><div class="u" id="mtn">+256777229389</div></div>
+<div class="j" onclick="t('a')"><div class="o"><img src="images/airtel-money.png" alt="Airtel"></div><h3>Airtel Money</h3><div class="u" id="a">+256708565054</div></div>
+<p style="margin:30px 0 10px;text-align:center;font-weight:700;color:#000">Donate Globally → PayPal | IBAN</p>
+<p style="text-align:center;font-weight:700;color:#000">Support from Anywhere<br>We welcome international donations. Give securely via PayPal or IBAN. Your gift provides shoes, dignity, and opportunity to vulnerable people.</p>
+<div class="j" onclick="t('iban-num')"><img src="images/IBAN.jpg" alt="IBAN"><h3>IBAN</h3><div class="u" id="iban-num">AE330030013548885810001</div></div>
+<div class="j" onclick="t('p')"><img src="images/paypal.png" alt="PayPal"><h3>PayPal</h3><div class="u" id="p">Kneelz45allan@gmail.com</div></div>
+</div>
+</div>
+</section>
+
+<footer>© 2026 Divine District Assembly - Mityana. Restoring communities based on natural law.</footer>
+</div>
+
+<div id="cb">🎧<span id="b">1</span></div>
+<div id="c">
+<div id="d"><span><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l">×</button></div>
+<div id="e"></div>
+<button id="k">Talk to Admin 👤</button>
+<div id="h"><input id="i" placeholder="Type a message..."><button id="j">Send</button></div>
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){ // WRAPPED IN DOMREADY
-
 // Nav scroll - FIXED: calculate header height on each click
 function goTo(id){
   const header = document.querySelector('header');
@@ -173,8 +262,6 @@ const observer = new IntersectionObserver(entries=>{entries.forEach(entry=>{if(e
 sections.forEach(s=>observer.observe(s));
 
 setInterval(check, 4000);check();
-
-}); // END DOMCONTENTLOADED
 </script>
 </body>
 </html>
