@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Divine District Assembly</title>
-<style>
-*<style>
+<style> /* FIXED: removed the extra * */
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 html,body{background:#fff;height:100%;overflow-x:hidden}
 .p{width:100%;background:#fff;min-height:100vh;position:relative}
@@ -54,7 +53,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 .j h3{font-size:1.2rem;color:#000;margin-bottom:10px}
 .u{display:none;margin-top:12px;padding:14px;background:#fff;border-radius:8px;font-weight:700;font-size:1.1rem;color:#000;border:1px solid #e5e5e5;letter-spacing:.5px;text-align:center;width:100%}
 .u.a{display:block}
-#cb{position:fixed;bottom:calc(160px + env(safe-area-inset-bottom));right:20px;width:60px;height:60px;background:#16a34a;color:#fff;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:24px;cursor:move;touch-action:none;z-index:1000;user-select:none;-webkit-user-drag:none;box-shadow:0 4px 16px rgba(22,163,74,.4)} /* FIXED: 160px and z-index 1000 */
+#cb{position:fixed;bottom:calc(160px + env(safe-area-inset-bottom));right:20px;width:60px;height:60px;background:#16a34a;color:#fff;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:24px;cursor:move;touch-action:none;z-index:1000;user-select:none;-webkit-user-drag:none;box-shadow:0 4px 16px rgba(22,163,74,.4)}
 #b{position:absolute;top:4px;right:4px;min-width:20px;height:20px;padding:0 5px;background:#ef4444;color:#fff;font-size:12px;font-weight:700;border-radius:999px;display:none;align-items:center;justify-content:center;border:2px solid #fff;pointer-events:none}
 #c{position:fixed;z-index:9999;width:320px;max-height:480px;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.15);display:none;flex-direction:column;overflow:hidden;border:1px solid #e5e5e5}
 #d{background:#16a34a;color:#fff;padding:12px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
@@ -70,7 +69,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 #j{background:#16a34a;color:#fff;border:0;padding:0 16px;cursor:pointer;font-weight:600}
 #k{width:100%;background:#dcfce7;border:0;border-top:1px solid #bbf7d0;padding:10px;font-size:.85rem;font-weight:600;cursor:pointer;color:#166534}
 .auth-list p{margin:4px 0;line-height:1.5}
-@media(max-width:480px){#c{width:calc(100vw - 40px)}#cb{width:56px;height:56px;font-size:22px;bottom:calc(160px + env(safe-area-inset-bottom))}} /* FIXED */
+@media(max-width:480px){#c{width:calc(100vw - 40px)}#cb{width:56px;height:56px;font-size:22px;bottom:calc(160px + env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body>
@@ -195,7 +194,6 @@ function t(i){
 
 document.addEventListener('DOMContentLoaded', function(){
 
-// Nav scroll - FIXED: calculate header height on each click
 function goTo(id){
   const header = document.querySelector('header');
   const headerHeight = header? header.offsetHeight + 10 : 60;
@@ -243,7 +241,6 @@ async function check(){if (!myRoomId) return;try{const r=await fetch(`${API_URL}
 const S=async()=>{const v=i.value.trim();if(!v)return;i.value='';await send(v);setTimeout(check, 100);};
 b.onclick=async()=>{ if(drag)return;o=!o;if(o){G();c.style.display='flex';c.onclick = (ev) => ev.stopPropagation(); u=0;B(); if(myRoomId) {await fetch(API_URL, {method: 'PATCH',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })})}; e.innerHTML = ''; last = 0; await check(); if(!poll) poll = setInterval(check,3000)}else{c.style.display='none';c.onclick = null;}};
 
-// Community Projects PDF button opens chat
 document.getElementById('pdf-chat-btn').onclick = function(){
   if(!o){b.click()}
   setTimeout(()=>{
