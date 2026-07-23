@@ -12,7 +12,7 @@ body{color:#333;font-weight:400;line-height:1.8;padding-bottom:80px}
 header{position:sticky;top:0;width:100%;background:#00ff7f;color:#000;display:flex;justify-content:center;align-items:center;padding:14px 20px;z-index:1000;border-bottom:1px solid #00cc66;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .l{font-weight:600;font-size:1rem;color:#000;letter-spacing:.5px;text-align:center}
 .b{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;align-items:center;padding:10px 4px calc(14px + env(safe-area-inset-bottom));z-index:1001;box-shadow:0 -2px 8px rgba(0,0,0,.05);touch-action: manipulation;}
-.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:#000;font-size:.65rem;font-weight:600;background:none;border:0;cursor:pointer;padding:10px 6px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none}
+.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:#000;font-size:.65rem;font-weight:600;background:none;border:0;cursor:pointer;padding:10px 6px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none;pointer-events:auto}
 .t span.e,.h span.e{font-size:1.6rem;line-height:1;background:transparent!important;pointer-events:none}
 .h.active span.e{transform:rotate(90deg)}
 .t:active,.h:active{ background:#f0fdf4!important; transform:scale(.96) }
@@ -184,6 +184,8 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function(){
+
 // Nav scroll - FIXED: calculate header height on each click
 function goTo(id){
   const header = document.querySelector('header');
@@ -262,6 +264,8 @@ const observer = new IntersectionObserver(entries=>{entries.forEach(entry=>{if(e
 sections.forEach(s=>observer.observe(s));
 
 setInterval(check, 4000);check();
+
+}); // END DOMCONTENTLOADED
 </script>
 </body>
 </html>
