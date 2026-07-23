@@ -9,33 +9,15 @@
 html,body{background:#fff;height:100%;overflow-x:hidden}
 .p{width:100%;background:#fff;min-height:100vh;position:relative}
 body{color:#333;font-weight:400;line-height:1.8;padding-bottom:80px}
-
 header{position:sticky;top:0;width:100%;background:#00ff7f;color:#000;display:flex;justify-content:center;align-items:center;padding:14px 20px;z-index:1000;border-bottom:1px solid #00cc66;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .l{font-weight:600;font-size:1rem;color:#000;letter-spacing:.5px;text-align:center}
-
-/* FIXED BOTTOMNAV FOR MOBILE */
-.b{
-  position:fixed;bottom:0;left:0;width:100%;
-  background:#fff;border-top:1px solid #e5e5e5;
-  display:flex;justify-content:space-around;align-items:center;
-  padding:10px 4px calc(14px + env(safe-area-inset-bottom)); /* iPhone safe area */
-  z-index:1001; /* above content, below chat */
-  box-shadow:0 -2px 8px rgba(0,0,0,.05);
-  touch-action: manipulation; /* no 300ms delay */
-}
-.t,.h{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;text-decoration:none;color:#000;font-size:.65rem;font-weight:600;
-  background:none;border:0;cursor:pointer;padding:10px 6px; /* BIGGER TAP AREA */
-  min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);
-  user-select:none
-}
+.b{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;align-items:center;padding:10px 4px calc(14px + env(safe-area-inset-bottom));z-index:1001;box-shadow:0 -2px 8px rgba(0,0,0,.05);touch-action: manipulation;}
+.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:#000;font-size:.65rem;font-weight:600;background:none;border:0;cursor:pointer;padding:10px 6px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none}
 .t span.e,.h span.e{font-size:1.6rem;line-height:1;background:transparent!important;pointer-events:none}
 .h.active span.e{transform:rotate(90deg)}
-.t:active,.h:active{ background:#f0fdf4!important; transform:scale(.96) } /* tap feedback */
+.t:active,.h:active{ background:#f0fdf4!important; transform:scale(.96) }
 .t.active { color: #16a34a; }
 .t.active span.e { transform: scale(1.2); }
-
 .n{list-style:none;display:none;position:fixed;bottom:80px;right:10px;background:#fff;flex-direction:column;width:240px;padding:6px 0;border:1px solid #e5e5e5;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);z-index:1002}
 @media(max-width:480px){.n{width:calc(100vw - 40px)}}
 .n.a{display:flex}
@@ -43,9 +25,7 @@ header{position:sticky;top:0;width:100%;background:#00ff7f;color:#000;display:fl
 .n a:last-child{border-bottom:0}
 .n a::before{content:attr(data-emoji);font-size:1.1rem;line-height:1;flex-shrink:0}
 .n a:hover{background:#f5f5f5}
-
 section{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start;padding:80px 20px 80px;scroll-margin-top:70px;background:#fff;color:#333}
-
 h1,h2{color:#000;font-weight:700}
 h1{font-size:2.2rem;margin-bottom:20px;line-height:1.3}
 h2{font-size:2rem;margin-bottom:25px}
@@ -89,7 +69,6 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 #j{background:#16a34a;color:#fff;border:0;padding:0 16px;cursor:pointer;font-weight:600}
 #k{width:100%;background:#dcfce7;border:0;border-top:1px solid #bbf7d0;padding:10px;font-size:.85rem;font-weight:600;cursor:pointer;color:#166534}
 .auth-list p{margin:4px 0;line-height:1.5}
-
 @media(max-width:480px){#c{width:calc(100vw - 40px)}#cb{width:56px;height:56px;font-size:22px}}
 </style>
 </head>
@@ -205,13 +184,32 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </div>
 
 <script>
-// Nav scroll
+// Nav scroll - FIXED FOR MOBILE JUMP
+const headerHeight = document.querySelector('header').offsetHeight + 10;
 const tabs = document.querySelectorAll('.t');
-tabs.forEach(tab => {tab.addEventListener('click', e => {e.preventDefault();document.querySelector(tab.getAttribute('href')).scrollIntoView({behavior: 'smooth'});}, {passive:false});});
 
-// More menu
-document.querySelectorAll('.n a').forEach(a => {a.addEventListener('click', (e) => {e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior: 'smooth'});n.classList.remove('a');m.classList.remove('active');});});
+tabs.forEach(tab => {
+  tab.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(tab.getAttribute('href'));
+    if(!target) return;
+    const targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    window.scrollTo({top: targetPos, behavior: 'smooth'});
+  }, {passive:false});
+});
+
+// More menu - same fix
 const m=document.getElementById('m'),n=document.getElementById('n');
+document.querySelectorAll('.n a').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if(!target) return;
+    const targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    window.scrollTo({top: targetPos, behavior: 'smooth'});
+    n.classList.remove('a');m.classList.remove('active');
+  });
+});
 m.onclick=e=>{e.stopPropagation();n.classList.toggle('a');m.classList.toggle('active')};
 document.addEventListener('click',e=>{if(!n.contains(e.target)&&!m.contains(e.target)){n.classList.remove('a');m.classList.remove('active')}});
 
