@@ -184,29 +184,30 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </div>
 
 <script>
-// Nav scroll - FIXED FOR MOBILE JUMP
-const headerHeight = document.querySelector('header').offsetHeight + 10;
-const tabs = document.querySelectorAll('.t');
+// Nav scroll - FIXED: calculate header height on each click
+function goTo(id){
+  const header = document.querySelector('header');
+  const headerHeight = header? header.offsetHeight + 10 : 60;
+  const target = document.querySelector(id);
+  if(!target) return;
+  const y = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+  window.scrollTo({top:y, behavior:'smooth'});
+}
 
+const tabs = document.querySelectorAll('.t');
 tabs.forEach(tab => {
   tab.addEventListener('click', e => {
     e.preventDefault();
-    const target = document.querySelector(tab.getAttribute('href'));
-    if(!target) return;
-    const targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-    window.scrollTo({top: targetPos, behavior: 'smooth'});
+    goTo(tab.getAttribute('href'));
   }, {passive:false});
 });
 
-// More menu - same fix
+// More menu
 const m=document.getElementById('m'),n=document.getElementById('n');
 document.querySelectorAll('.n a').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
-    const target = document.querySelector(a.getAttribute('href'));
-    if(!target) return;
-    const targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-    window.scrollTo({top: targetPos, behavior: 'smooth'});
+    goTo(a.getAttribute('href'));
     n.classList.remove('a');m.classList.remove('active');
   });
 });
