@@ -141,7 +141,7 @@ footer{text-align:center;padding:40px 20px;background:#000;color:#fff;margin-bot
 </div>
 </section>
 
-<section id="join"><div class="c"><h2>Join the Movement</h2><p>We invite all residents of Mityana District to join our Community assemblies and be part of the movement towards self governance. Your participation is crucial for the success of our restoration plans.</p><a href="mailto:mityana.projects@protonmail.com" class="x" style="margin-top:25px">mityana.projects@protonmail.com</a></div></section>
+<section id="join"><div class="c"><h2>Join the Movement</h2><p>We invite all residents of Mityana District to join our Community assemblies and be part of the movement towards self governance. Your participation is crucial for the success of our restoration plans.</p></div></section>
 
 <section class="s" id="shoe-donate">
 <div class="c">
@@ -241,13 +241,23 @@ if (!myRoomId ||!myRoomId.startsWith('User_') || isNaN(myRoomId.split('_')[1])) 
     myRoomId = `User_${rawNumberId}`;
     localStorage.setItem('chat_room_id', myRoomId);
 }
-const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),backBtn=document.getElementById("backBtn"),e=document.getElementById("e"),inp=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0;
+const b=document.getElementById("cb"),bb=document.getElementById("b"),c=document.getElementById("c"),l=document.getElementById("l"),backBtn=document.getElementById("backBtn"),e=document.getElementById("e"),inp=document.getElementById("i"),j=document.getElementById("j"),k=document.getElementById("k");let o=0,u=0,last=0,poll=null,x,y,lx,ly,drag=0,isSending=false;
 const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};
 const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};
 
 async function send(msg){if (!myRoomId) return;await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'user',text:msg,roomId:myRoomId})}).catch(()=>A('⚠️ Failed to send message','f'))}
 async function check(){if (!myRoomId) return;try{const r=await fetch(`${API_URL}?roomId=${myRoomId}`);if(!r.ok)return;const data = await r.json();if (o) {if(data.userUnread > 0) {await fetch(API_URL, {method: 'PATCH',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })})}u = 0;B();} else { u = data.userUnread || 0;B();}const messageList = data.messages || [];if (e.children.length === 0 && messageList.length > 0) { last = 0;}if(messageList.length>last){messageList.slice(last).forEach(m=>{try {let txt = ""; let cls = "f";if (typeof m === 'object' && m!== null) { txt = m.text; cls = (m.sender === 'admin')? 'f' : 'g';} else if (typeof m === 'string') { if (m.startsWith("{")) { const parsed = JSON.parse(m); txt = parsed.text; cls = (parsed.sender === 'admin')? 'f' : 'g'; } else { txt = m; }}if (txt) A(txt, cls);} catch(err){}});last=messageList.length}}catch(err){}}
-const S=async()=>{const v=inp.value.trim();if(!v)return;inp.value='';A(v,'g');await send(v);setTimeout(check, 200);};
+
+const S=async()=>{
+  if(isSending) return;
+  const v=inp.value.trim();
+  if(!v)return;
+  isSending=true;
+  inp.value='';
+  A(v,'g');
+  await send(v);
+  setTimeout(()=>{check(); isSending=false}, 200);
+};
 
 const closeChat = ()=>{showSection('about'); c.classList.remove('full');c.style.display='none';o=0;document.body.style.overflow='';clearInterval(poll);poll=null};
 const openChatFull = async()=>{
@@ -273,7 +283,7 @@ document.getElementById('pdf-chat-btn').onclick = function(){
 };
 
 j.onclick=S;
-inp.onkeydown=x=>{if(x.key=='Enter'){x.preventDefault();S()}};
+inp.onkeydown=x=>{if(x.key=='Enter'){x.preventDefault()}}; // ENTER DISABLED
 k.onclick=()=>{if(o)return; A('Connecting you to Admin...','f')};
 
 // Draggable chat button
