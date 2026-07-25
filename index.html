@@ -237,7 +237,7 @@ const m=document.getElementById('m'),n=document.getElementById('n');
 m.onclick=e=>{e.stopPropagation();n.classList.toggle('a');m.classList.toggle('active')};
 document.addEventListener('click',e=>{if(!n.contains(e.target)&&!m.contains(e.target)){n.classList.remove('a');m.classList.remove('active')}});
 
-// Chat widget FULL PAGE - FIXED SEND + BACK
+// Chat widget FULL PAGE
 const API_URL = "/api/chat";
 let myRoomId = localStorage.getItem('chat_room_id');
 if (!myRoomId ||!myRoomId.startsWith('User_') || isNaN(myRoomId.split('_')[1])) {
@@ -251,9 +251,9 @@ const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerH
 
 async function send(msg){if (!myRoomId) return;await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'user',text:msg,roomId:myRoomId})}).catch(()=>A('⚠️ Failed to send message','f'))}
 async function check(){if (!myRoomId) return;try{const r=await fetch(`${API_URL}?roomId=${myRoomId}`);if(!r.ok)return;const data = await r.json();if (o) {if(data.userUnread > 0) {await fetch(API_URL, {method: 'PATCH',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })})}u = 0;B();} else { u = data.userUnread || 0;B();}const messageList = data.messages || [];if (e.children.length === 0 && messageList.length > 0) { last = 0;}if(messageList.length>last){messageList.slice(last).forEach(m=>{try {let txt = ""; let cls = "f";if (typeof m === 'object' && m!== null) { txt = m.text; cls = (m.sender === 'admin')? 'f' : 'g';} else if (typeof m === 'string') { if (m.startsWith("{")) { const parsed = JSON.parse(m); txt = parsed.text; cls = (parsed.sender === 'admin')? 'f' : 'g'; } else { txt = m; }}if (txt) A(txt, cls);} catch(err){}});last=messageList.length}}catch(err){}}
-const S=async()=>{const v=inp.value.trim();if(!v)return;inp.value='';A(v,'g');await send(v);setTimeout(check, 300);};
+const S=async()=>{const v=inp.value.trim();if(!v)return;inp.value='';A(v,'g');await send(v);setTimeout(check, 200);};
 
-const closeChat = ()=>{c.classList.remove('full');c.style.display='none';o=0;document.body.style.overflow='';clearInterval(poll);poll=null};
+const closeChat = ()=>{showSection('about'); c.classList.remove('full');c.style.display='none';o=0;document.body.style.overflow='';clearInterval(poll);poll=null};
 const openChatFull = async()=>{
   c.classList.add('full');
   c.style.display='flex';
@@ -276,8 +276,8 @@ document.getElementById('pdf-chat-btn').onclick = function(){
   },400);
 };
 
-j.onclick=S;
-inp.onkeydown=x=>{if(x.key=='Enter')S()};
+j.addEventListener('click', S);
+inp.addEventListener('keydown',x=>{if(x.key=='Enter'){x.preventDefault();S()}});
 k.onclick=()=>{if(o)return; A('Connecting you to Admin...','f')};
 
 // Draggable chat button
