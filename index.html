@@ -11,14 +11,21 @@ html,body{background:#fff;height:100%;overflow-x:hidden}
 body{color:#333;font-weight:400;line-height:1.8;padding-bottom:0}
 header{position:sticky;top:0;width:100%;background:#00ff7f;color:#000;display:flex;justify-content:center;align-items:center;padding:14px 20px;z-index:1000;border-bottom:1px solid #00cc66;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .l{font-weight:600;font-size:1rem;color:#000;letter-spacing:.5px;text-align:center}
-.b{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;align-items:center;padding:8px 2px calc(12px + env(safe-area-inset-bottom));z-index:1001;box-shadow:0 -2px 8px rgba(0,0,0,.05);touch-action: manipulation;}
 
-.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:#000;font-size:.52rem;font-weight:600;background:none;border:0;cursor:pointer;padding:8px 3px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none;pointer-events:auto;white-space:nowrap}
-.t span.e,.h span.e{font-size:1.5rem;line-height:1;background:transparent!important;pointer-events:none;margin-bottom:1px}
+/* BOTTOM NAV WITH GREY BOXES */
+.b{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-between;align-items:stretch;gap:6px;padding:8px 8px calc(12px + env(safe-area-inset-bottom));z-index:1001;box-shadow:0 -2px 8px rgba(0,0,0,.05);touch-action: manipulation;}
+
+.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:#000;font-size:.7rem;font-weight:600;background:#e9e9e9;border:1px solid #d0d0d0;border-radius:12px;cursor:pointer;padding:10px 6px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none;pointer-events:auto;white-space:normal;line-height:1.2;transition:.2s}
+.t span.e,.h span.e{font-size:1.4rem;line-height:1;background:transparent!important;pointer-events:none;margin-bottom:1px}
 .h.active span.e{transform:rotate(90deg)}
-.t:active,.h:active{ background:#f0fdf4!important; transform:scale(.96) }
-.t.active { color: #16a34a; }
-.t.active span.e { transform: scale(1.15); }
+.t:active,.h:active{background:#d6f5e0!important;transform:scale(.96)}
+.t.active{color:#16a34a;background:#d6f5e0;border-color:#16a34a}
+.t.active span.e{transform:scale(1.15)}
+
+@media(max-width:360px){
+.t,.h{font-size:.65rem;padding:8px 4px}
+.t span.e,.h span.e{font-size:1.3rem}
+}
 
 .n{list-style:none;display:none;position:fixed;bottom:80px;right:10px;background:#fff;flex-direction:column;width:240px;padding:6px 0;border:1px solid #e5e5e5;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);z-index:1002}
 @media(max-width:480px){.n{width:calc(100vw - 40px)}}
@@ -39,7 +46,7 @@ p,li,span,div{font-weight:400;color:#333;font-size:1rem}
 .c{width:100%;max-width:800px;margin:0 auto}
 .x{display:inline-block;background:#000;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;margin-top:15px;font-weight:600;cursor:pointer;border:0}
 .x:hover{background:#333}
-footer{width:100%;text-align:center;padding:40px 20px calc(40px + 80px);background:#000;color:#fff;display:block;margin:0} /* added 80px bottom padding for nav */
+footer{width:100%;text-align:center;padding:40px 20px calc(40px + 80px);background:#000;color:#fff;display:block;margin:0}
 .z{font-weight:700;color:#000}
 .y{display:inline-block;background:#000;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:15px;font-weight:600}
 .y:hover{background:#333}
@@ -283,7 +290,7 @@ document.getElementById('pdf-chat-btn').onclick = function(){
 };
 
 j.onclick=S;
-inp.onkeydown=x=>{if(x.key=='Enter'){x.preventDefault()}}; // ENTER DISABLED
+inp.onkeydown=x=>{if(x.key=='Enter'){x.preventDefault()}};
 k.onclick=()=>{if(o)return; A('Connecting you to Admin...','f')};
 
 // Draggable chat button
