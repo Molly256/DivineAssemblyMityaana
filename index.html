@@ -15,17 +15,19 @@ header{position:sticky;top:0;width:100%;background:#00ff7f;color:#000;display:fl
 /* BOTTOM NAV WITH GREY BOXES - FIXED TEXT FIT */
 .b{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-between;align-items:stretch;gap:5px;padding:6px 6px calc(10px + env(safe-area-inset-bottom));z-index:1001;box-shadow:0 -2px 8px rgba(0,0,0,.05);touch-action: manipulation;}
 
-.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:#000;font-size:.6rem;font-weight:600;background:#e9e9e9;border:1px solid #d0d0d0;border-radius:10px;cursor:pointer;padding:7px 4px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none;pointer-events:auto;white-space:normal;line-height:1.15;transition:.2s;overflow:hidden}
-.t span.e,.h span.e{font-size:1.25rem;line-height:1;background:transparent!important;pointer-events:none;margin-bottom:1px}
-.t span:last-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.t,.h{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:#000;font-size:.6rem;font-weight:600;background:#e9e9e9;border:1px solid #d0d0d0;border-radius:10px;cursor:pointer;padding:7px 3px;min-width:0;text-align:center;flex:1;-webkit-tap-highlight-color:rgba(22,163,74,.2);user-select:none;pointer-events:auto;white-space:nowrap;line-height:1.15;transition:.2s;overflow:hidden}
+.t span.e,.h span.e{font-size:1.25rem;line-height:1;background:transparent!important;pointer-events:none;margin-bottom:1px;flex-shrink:0}
+.t span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;display:block}
+.t[data-target="about"] span:last-child{font-size:.52rem;letter-spacing:-.2px} /* About us in 1 line */
 .h.active span.e{transform:rotate(90deg)}
 .t:active,.h:active{background:#d6f5e0!important;transform:scale(.96)}
 .t.active{color:#16a34a;background:#d6f5e0;border-color:#16a34a}
 .t.active span.e{transform:scale(1.15)}
 
 @media(max-width:360px){
-.t,.h{font-size:.55rem;padding:6px 3px;gap:2px}
+.t,.h{font-size:.55rem;padding:6px 2px;gap:2px}
 .t span.e,.h span.e{font-size:1.15rem}
+.t[data-target="about"] span:last-child{font-size:.48rem}
 }
 
 .n{list-style:none;display:none;position:fixed;bottom:80px;right:10px;background:#fff;flex-direction:column;width:240px;padding:6px 0;border:1px solid #e5e5e5;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);z-index:1002}
@@ -66,7 +68,7 @@ footer{width:100%;text-align:center;padding:40px 20px calc(40px + 80px);backgrou
 .u{display:none;margin-top:12px;padding:14px;background:#fff;border-radius:8px;font-weight:700;font-size:1.1rem;color:#000;border:1px solid #e5e5e5;letter-spacing:.5px;text-align:center;width:100%}
 .u.a{display:block}
 
-/* CHAT WIDGET - FULL PAGE */
+/* CHAT WIDGET - FULL PAGE FIXED FOR ANDROID */
 #cb{position:fixed;bottom:calc(160px + env(safe-area-inset-bottom));right:20px;width:60px;height:60px;background:#16a34a;color:#fff;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:24px;cursor:pointer;touch-action:none;z-index:1000;user-select:none;-webkit-user-drag:none;box-shadow:0 4px 16px rgba(22,163,74,.4)}
 #b{position:absolute;top:4px;right:4px;min-width:20px;height:20px;padding:0 5px;background:#ef4444;color:#fff;font-size:12px;font-weight:700;border-radius:999px;display:none;align-items:center;justify-content:center;border:2px solid #fff;pointer-events:none}
 #c{position:fixed;z-index:9999;width:320px;max-height:480px;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.15);display:none;flex-direction:column;overflow:hidden;border:1px solid #e5e5e5}
@@ -77,13 +79,13 @@ footer{width:100%;text-align:center;padding:40px 20px calc(40px + 80px);backgrou
 #d span{display:flex;align-items:center;gap:8px}
 #d svg{width:18px;height:18px}
 #d button#l{background:0;border:0;color:#fff;font-size:20px;cursor:pointer;line-height:1}
-#e{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:#f0fdf4}
-.f,.g{max-width:85%;padding:10px 12px;border-radius:14px;font-size:.9rem;line-height:1.4}
+#e{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:#f0fdf4;padding-bottom:60px}
+.f,.g{max-width:85%;padding:10px 12px;border-radius:14px;font-size:.9rem;line-height:1.4;word-break:break-word}
 .f{background:#16a34a;color:#fff;align-self:flex-start;border-bottom-left-radius:4px}
 .g{background:#dcfce7;color:#166534;align-self:flex-end;border-bottom-right-radius:4px}
-#h{display:flex;border-top:1px solid #e5e5e5;position:relative;z-index:2}
-#i{flex:1;border:0;padding:12px;font-size:.9rem;outline:0;background:#fff}
-#j{background:#16a34a;color:#fff;border:0;padding:0 16px;cursor:pointer;font-weight:600;font-size:.9rem}
+#h{display:flex;border-top:1px solid #e5e5e5;position:sticky;bottom:0;background:#fff;z-index:10}
+#i{flex:1;border:0;padding:12px;font-size:16px;outline:0;background:#fff;-webkit-appearance:none}
+#j{background:#16a34a;color:#fff;border:0;padding:0 16px;cursor:pointer;font-weight:600;font-size:.9rem;min-width:60px}
 #k{width:100%;background:#dcfce7;border:0;border-top:1px solid #bbf7d0;padding:10px;font-size:.85rem;font-weight:600;cursor:pointer;color:#166534}
 .auth-list p{margin:4px 0;line-height:1.5}
 @media(max-width:480px){#c{width:calc(100vw - 40px)}#cb{width:56px;height:56px;font-size:22px;bottom:calc(160px + env(safe-area-inset-bottom))}}
@@ -197,7 +199,7 @@ footer{width:100%;text-align:center;padding:40px 20px calc(40px + 80px);backgrou
 <div id="d"><button id="backBtn" type="button">Back</button><span><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 10 0 00-8.94 14.32l-1.36 4.08a1 1 0 001.27 1.27l4.08-1.36A10 10 0 1012 2z"/></svg>Chat</span><button id="l" type="button">×</button></div>
 <div id="e"></div>
 <button id="k" type="button">Talk to Admin 👤</button>
-<div id="h"><input id="i" placeholder="Type a message..."><button id="j" type="button">Send</button></div>
+<div id="h"><input id="i" placeholder="Type a message..." autocomplete="off"><button id="j" type="button">Send</button></div>
 </div>
 
 <script>
@@ -241,7 +243,7 @@ const m=document.getElementById('m'),n=document.getElementById('n');
 m.onclick=e=>{e.stopPropagation();n.classList.toggle('a');m.classList.toggle('active')};
 document.addEventListener('click',e=>{if(!n.contains(e.target)&&!m.contains(e.target)){n.classList.remove('a');m.classList.remove('active')}});
 
-// Chat widget
+// Chat widget FIXED
 const API_URL = "/api/chat";
 let myRoomId = localStorage.getItem('chat_room_id');
 if (!myRoomId ||!myRoomId.startsWith('User_') || isNaN(myRoomId.split('_')[1])) {
@@ -254,7 +256,8 @@ const B=()=>{bb.textContent=u>9?'9+':u;bb.style.display=u?'flex':'none'};
 const A=(t,cls)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=t;e.appendChild(d);e.scrollTop=e.scrollHeight;if(!o&&cls=='f'){u++;B()}};
 
 async function send(msg){if (!myRoomId) return;await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sender:'user',text:msg,roomId:myRoomId})}).catch(()=>A('⚠️ Failed to send message','f'))}
-async function check(){if (!myRoomId) return;try{const r=await fetch(`${API_URL}?roomId=${myRoomId}`);if(!r.ok)return;const data = await r.json();if (o) {if(data.userUnread > 0) {await fetch(API_URL, {method: 'PATCH',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })})}u = 0;B();} else { u = data.userUnread || 0;B();}const messageList = data.messages || [];if (e.children.length === 0 && messageList.length > 0) { last = 0;}if(messageList.length>last){messageList.slice(last).forEach(m=>{try {let txt = ""; let cls = "f";if (typeof m === 'object' && m!== null) { txt = m.text; cls = (m.sender === 'admin')? 'f' : 'g';} else if (typeof m === 'string') { if (m.startsWith("{")) { const parsed = JSON.parse(m); txt = parsed.text; cls = (parsed.sender === 'admin')? 'f' : 'g'; } else { txt = m; }}if (txt) A(txt, cls);} catch(err){}});last=messageList.length}}catch(err){}}
+
+async function check(){if (!myRoomId) return;try{const r=await fetch(`${API_URL}?roomId=${myRoomId}`);if(!r.ok)return;const data = await r.json();if (o) {if(data.userUnread > 0) {await fetch(API_URL, {method: 'PATCH',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })})}u = 0;B();} else { u = data.userUnread || 0;B();}const messageList = data.messages || [];if(messageList.length > last){e.innerHTML=''; messageList.forEach(m=>{try {let txt = ""; let cls = "f";if (typeof m === 'object' && m!== null) { txt = m.text; cls = (m.sender === 'admin')? 'f' : 'g';} else if (typeof m === 'string') { if (m.startsWith("{")) { const parsed = JSON.parse(m); txt = parsed.text; cls = (parsed.sender === 'admin')? 'f' : 'g'; } else { txt = m; }}if (txt) A(txt, cls);} catch(err){}});last=messageList.length}}catch(err){}}
 
 const S=async()=>{
   if(isSending) return;
@@ -262,19 +265,19 @@ const S=async()=>{
   if(!v)return;
   isSending=true;
   inp.value='';
-  A(v,'g');
+  A(v,'g'); // show instantly
   await send(v);
-  setTimeout(()=>{check(); isSending=false}, 200);
+  isSending=false; // removed extra check() call here to prevent duplicate
 };
 
-const closeChat = ()=>{showSection('about'); c.classList.remove('full');c.style.display='none';o=0;document.body.style.overflow='';clearInterval(poll);poll=null};
+const closeChat = ()=>{ c.classList.remove('full');c.style.display='none';o=0;document.body.style.overflow='';clearInterval(poll);poll=null};
 const openChatFull = async()=>{
   c.classList.add('full');
   c.style.display='flex';
   document.body.style.overflow='hidden';
   o=1; u=0; B();
   if(myRoomId) {await fetch(API_URL, {method: 'PATCH',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ roomId: myRoomId, clearFor: 'user' })})};
-  e.innerHTML = ''; last = 0; await check();
+  last=0; await check(); // load once
   if(!poll) poll = setInterval(check,3000)
 };
 
@@ -291,7 +294,7 @@ document.getElementById('pdf-chat-btn').onclick = function(){
 };
 
 j.onclick=S;
-inp.onkeydown=x=>{if(x.key=='Enter'){x.preventDefault()}};
+inp.addEventListener('keydown',x=>{if(x.key=='Enter'){x.preventDefault();S()}});
 k.onclick=()=>{if(o)return; A('Connecting you to Admin...','f')};
 
 // Draggable chat button
