@@ -25,11 +25,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // 1. DELETE CONVERSATION
+    // 1. DELETE CONVERSATION - PASSWORD REMOVED
     if (req.method === 'DELETE') {
-      const authHeader = req.headers['x-admin-auth'];
-      if (authHeader !== 'Mityana9') return res.status(403).json({ error: 'Unauthorized' });
-
       const { roomId } = req.body;
       if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
 
@@ -44,7 +41,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET' && req.query.action === 'get_id') {
       const { roomId } = req.query;
       if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
-      
+
       const cleanId = getExactCaseId(roomId);
       const roomExists = await redis.hexists('chat:active_rooms', cleanId);
       if (!roomExists) {
@@ -56,13 +53,13 @@ export default async function handler(req, res) {
     // 3. POST A NEW MESSAGE
     if (req.method === 'POST') {
       const { sender, text, roomId } = req.body;
-      if (!sender || !text || !roomId || roomId === 'null' || roomId === 'undefined') {
+      if (!sender ||!text ||!roomId || roomId === 'null' || roomId === 'undefined') {
         return res.status(400).json({ error: 'Missing or invalid fields' });
       }
-      
-      const cleanId = getExactCaseId(roomId); 
+
+      const cleanId = getExactCaseId(roomId);
       const newMessage = { sender, text, timestamp: Date.now() };
-      
+
       await redis.rpush(`chat:room:${cleanId}`, JSON.stringify(newMessage));
       await redis.ltrim(`chat:room:${cleanId}`, -1000, -1);
       await redis.hset('chat:active_rooms', { [cleanId]: Date.now() });
@@ -84,14 +81,14 @@ export default async function handler(req, res) {
         const list = [];
         for (const id of Object.keys(rooms)) {
           if (!id || id === 'null' || id === 'undefined' || id.trim() === '') continue;
-          
+
           const cleanId = getExactCaseId(id);
           const unread = await redis.hgetall(`chat:unread:${cleanId}`) || {};
           let displayLabel = cleanId.replace('User_', 'User #');
-          
-          list.push({ 
-            id: cleanId, 
-            lastActive: rooms[id], 
+
+          list.push({
+            id: cleanId,
+            lastActive: rooms[id],
             adminUnread: parseInt(unread.admin || 0),
             displayName: displayLabel
           });
@@ -101,12 +98,12 @@ export default async function handler(req, res) {
 
       if (!roomId || roomId === 'null' || roomId === 'undefined') return res.status(400).json({ error: 'Invalid roomId' });
       const cleanId = getExactCaseId(roomId);
-      
+
       const messagesRaw = await redis.lrange(`chat:room:${cleanId}`, 0, -1) || [];
-      
+
       // WhatsApp Fix: Converts mixed types or objects into strings so admin.html parses perfectly
       const messages = messagesRaw.map(msg => {
-        if (typeof msg === 'object' && msg !== null) {
+        if (typeof msg === 'object' && msg!== null) {
           return JSON.stringify(msg);
         }
         return String(msg);
@@ -118,14 +115,14 @@ export default async function handler(req, res) {
     // 5. RESET BADGE METRICS
     if (req.method === 'PATCH') {
       const { roomId, clearFor } = req.body;
-      if (!roomId || roomId === 'null' || roomId === 'undefined' || !clearFor) {
+      if (!roomId || roomId === 'null' || roomId === 'undefined' ||!clearFor) {
         return res.status(400).json({ error: 'Invalid payload elements' });
       }
       const cleanId = getExactCaseId(roomId);
       await redis.hset(`chat:unread:${cleanId}`, { [clearFor]: 0 });
       return res.status(200).json({ success: true });
     }
-    
+
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
     return res.status(500).json({ error: 'Database error' });
